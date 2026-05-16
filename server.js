@@ -30,7 +30,7 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, 200, {
         ok: true,
         apiReady: Boolean(process.env.OPENAI_API_KEY),
-        model: process.env.OPENAI_MODEL || "gpt-5.4-mini"
+        model: process.env.OPENAI_MODEL || "gpt-5-mini"
       }, req);
     }
 
@@ -74,7 +74,7 @@ async function handleRoboRequest(req, res) {
   const timeout = setTimeout(() => controller.abort(), 45000);
 
   try {
-    const model = process.env.OPENAI_MODEL || "gpt-5.4-mini";
+    const model = process.env.OPENAI_MODEL || "gpt-5-mini";
     const apiResponse = await fetch(openAiUrl, {
       method: "POST",
       headers: {
