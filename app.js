@@ -524,9 +524,66 @@ function apiUrl(path) {
 }
 
 function clientDemoReply(message) {
-  if (language === "tr") {
-    return `GitHub Pages demo modundayım. API proxy adresi bağlanınca canlı yanıt vereceğim. Duyduğum metin: "${message}".`;
+  return localBrainReply(message, language);
+}
+
+function localBrainReply(message, lang) {
+  const text = message.toLocaleLowerCase(lang === "tr" ? "tr-TR" : "en-US");
+  const now = new Date();
+
+  if (matchesAny(text, ["merhaba", "selam", "slm", "hello", "hi", "hey"])) {
+    return lang === "tr"
+      ? "Merhaba. Ben Robo AI. API olmadan kendi yerel çekirdeğimle çalışıyorum; kısa sorulara, komutlara ve sohbetlere cevap verebilirim."
+      : "Hello. I am Robo AI. Without an API, I run on my local core and can answer short questions, commands, and simple chats.";
   }
 
-  return `I am in GitHub Pages demo mode. Once an API proxy URL is connected, I will answer live. I heard: "${message}".`;
+  if (matchesAny(text, ["saat", "kaç", "time"])) {
+    return lang === "tr"
+      ? `Şu an saat ${now.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}.`
+      : `It is ${now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}.`;
+  }
+
+  if (matchesAny(text, ["tarih", "bugün", "date", "today"])) {
+    return lang === "tr"
+      ? `Bugünün tarihi ${now.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}.`
+      : `Today is ${now.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}.`;
+  }
+
+  if (matchesAny(text, ["adın", "kimsin", "who are you", "your name"])) {
+    return lang === "tr"
+      ? "Ben Robo AI. Sesini yazıya çeviren, ekranda altyazı gösteren ve cevaplarını sesli okuyabilen yerel bir asistanım."
+      : "I am Robo AI, a local assistant that turns speech into text, shows subtitles, and reads replies aloud.";
+  }
+
+  if (matchesAny(text, ["ne yapabilirsin", "özellik", "yetenek", "what can you do", "features"])) {
+    return lang === "tr"
+      ? "Mikrofonu dinleyebilirim, konuşmanı altyazıya çevirebilirim, Türkçe ve İngilizce cevap verebilirim, basit soruları yerel olarak yanıtlayabilirim ve konuşurken orb animasyonunu hareket ettirebilirim."
+      : "I can listen through the microphone, turn speech into subtitles, answer in Turkish or English, handle simple questions locally, and animate the orb while speaking.";
+  }
+
+  if (matchesAny(text, ["github", "pages", "site", "yayınla", "deploy"])) {
+    return lang === "tr"
+      ? "GitHub Pages için public klasörü yayınlanır. Bu sürüm API olmadan da çalışır; gerçek büyük model istersen bir API veya sunucuda çalışan model gerekir."
+      : "For GitHub Pages, the public folder is published. This version works without an API, but a larger real model needs an API or a hosted model.";
+  }
+
+  if (matchesAny(text, ["api", "openrouter", "openai", "key"])) {
+    return lang === "tr"
+      ? "API kullanmadan çalışabilirim, ama bu yerel çekirdek sınırlıdır. Büyük dil modeli gibi yaratıcı ve derin cevaplar için bir modelin bir yerde çalışması gerekir."
+      : "I can work without an API, but this local core is limited. For creative and deep answers like a large language model, a model must run somewhere.";
+  }
+
+  if (text.endsWith("?") || matchesAny(text, ["neden", "nasıl", "what", "why", "how"])) {
+    return lang === "tr"
+      ? "Bunu yerel çekirdeğimle kesin cevaplayamam. Kısa bir komut, saat, tarih, kendimi tanıtma veya proje hakkında bir şey sorarsan cevaplayabilirim."
+      : "I cannot answer that confidently with my local core. Ask a short command, time, date, identity, or project question and I can help.";
+  }
+
+  return lang === "tr"
+    ? `Seni duydum: "${message}". Şu an kendi yerel zekamla çalışıyorum; daha basit veya net bir soru sorarsan cevaplamaya çalışırım.`
+    : `I heard: "${message}". I am running on my local intelligence right now; ask a simpler or clearer question and I will try to answer.`;
+}
+
+function matchesAny(text, patterns) {
+  return patterns.some(pattern => text.includes(pattern));
 }
