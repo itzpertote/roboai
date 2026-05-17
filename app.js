@@ -1392,7 +1392,7 @@ const definitionKnowledge = {
     en: "A database is a system where information is stored digitally in an organized and quickly accessible manner."
   },
   "veri tabani": {
-    tr: "Veritabanı, bilgilerin düzenli ogre hızlı erişilebilir bir şekilde dijital ortamda saklandığı sistemdir.",
+    tr: "Veritabanı, bilgilerin düzenli hızlı erişilebilir bir şekilde dijital ortamda saklandığı sistemdir.",
     en: "A database is a system where information is stored digitally in an organized and quickly accessible manner."
   },
   bulut: {
