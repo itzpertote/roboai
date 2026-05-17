@@ -986,7 +986,7 @@ function localBrainReply(message, lang) {
     return definitionAnswer;
   }
 
-  if (hasAny(text, ["merhaba", "selam", "slm", "sa", "hello", "hi", "hey", "good morning", "good evening"])) {
+  if (hasAny(text, ["merhaba", "selam", "slm", "robo", "hello", "hi", "hey", "good morning", "good evening"])) {
     return lang === "tr"
       ? "Merhaba. Ben Robo AI. Yerel çekirdeğim açık; sorunu cümle halinde yaz, anlamaya çalışayım."
       : "Hello. I am Robo AI. My local core is active; write your question as a sentence and I will try to understand it.";
