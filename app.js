@@ -507,7 +507,7 @@ function phoneticizeEnglishWord(word) {
 
 const englishPhoneticDictionary = {
   a: "e",
-  about: "ıbaut",
+  about: "ebaut",
   active: "ektiv",
   advice: "edvays",
   age: "eyc",
@@ -566,10 +566,10 @@ const englishPhoneticDictionary = {
   greetings: "gritings",
   has: "hez",
   have: "hev",
-  hear: "hir",
+  hear: "hiyır",
   hello: "helo",
   help: "help",
-  here: "hir",
+  here: "hiyır",
   hi: "hay",
   how: "hau",
   html: "eyç ti em el",
@@ -1016,10 +1016,74 @@ function localBrainReply(message, lang) {
       : "Short summary: Robo AI now runs locally on the main site without an API; it has voice, subtitles, two languages, and basic sentence understanding.";
   }
 
+  if (hasAny(text, ["nasil calisiyorsun", "nasil calisir", "how do you work", "how does this work"])) {
+    return lang === "tr"
+      ? "Şöyle çalışıyorum: tarayıcı sesini yazıya çeviriyor, ben yazıyı yerel niyet kurallarıyla analiz ediyorum, uygun cevabı seçiyorum ve sonra cevabı sesli okuyorum."
+      : "I work like this: the browser turns speech into text, I analyze the text with local intent rules, choose a reply, and then read it aloud.";
+  }
+
+  if (hasAny(text, ["neden api yok", "niye api yok", "why no api", "without api"])) {
+    return lang === "tr"
+      ? "API yok çünkü ana sitede ücretsiz ve güvenli çalışması hedeflendi. API anahtarı siteye koyulursa herkes görebilir; bu yüzden yerel çekirdek kullanıyorum."
+      : "There is no API because the main site is meant to run free and safely. If an API key is placed in the site, anyone can see it, so I use a local core.";
+  }
+
+  if (hasAny(text, ["akilli misin", "zeki misin", "are you smart", "intelligent"])) {
+    return lang === "tr"
+      ? "Tam büyük model kadar esnek değilim, ama sabit cevap veren basit bir bot da değilim. Cümledeki niyeti yakalayıp yerel kurallarla cevap üretmeye çalışıyorum."
+      : "I am not as flexible as a full large model, but I am not just a fixed reply bot either. I detect the intent and answer with local rules.";
+  }
+
+  if (hasAny(text, ["ne demek", "anlami ne", "what means", "what does", "meaning"])) {
+    return explainMeaning(text, lang);
+  }
+
+  if (hasAny(text, ["avantaj", "dezavantaj", "iyi mi", "kotu mu", "pros", "cons", "better"])) {
+    return lang === "tr"
+      ? "Kısa değerlendirme: yerel mod ücretsiz, hızlı ve anahtar istemez; dezavantajı cevaplarının sınırlı olmasıdır. API modu daha zeki olur ama kredi ve güvenli proxy ister."
+      : "Short take: local mode is free, fast, and needs no key; its downside is limited answers. API mode is smarter but needs credits and a safe proxy.";
+  }
+
+  if (hasAny(text, ["plan yap", "adim adim", "step by step", "make a plan"])) {
+    return lang === "tr"
+      ? "Plan: önce hedefi netleştir, sonra en küçük çalışan sürümü yap, sonra ses ve dil hatalarını düzelt, en son GitHub Pages'e yükleyip Ctrl+F5 ile test et."
+      : "Plan: define the goal, build the smallest working version, fix voice and language issues, then upload to GitHub Pages and test with Ctrl+F5.";
+  }
+
+  if (hasAny(text, ["kod", "javascript", "html", "css", "code"])) {
+    return lang === "tr"
+      ? "Bu proje üç ana dosyayla çalışıyor: HTML yapıyı kuruyor, CSS orb ve arayüzü çiziyor, JavaScript mikrofonu, yerel zekayı ve sesli okumayı yönetiyor."
+      : "This project runs with three main files: HTML builds the structure, CSS draws the orb and interface, and JavaScript controls the microphone, local brain, and voice output.";
+  }
+
+  if (hasAny(text, ["hata", "bug", "error", "sorun", "problem"])) {
+    return lang === "tr"
+      ? "Hata çözmek için önce ekrandaki mesajı aynen oku, sonra hangi adımda olduğunu söyle. Genelde bu projede sorunlar cache, dosya yolu, mikrofon izni veya eski app.js yüzünden çıkıyor."
+      : "To debug, read the exact error message and say which step you are on. In this project, issues usually come from cache, file paths, microphone permission, or an old app.js.";
+  }
+
+  if (hasAny(text, ["neden", "why"])) {
+    return lang === "tr"
+      ? "Muhtemel neden: yerel web uygulamalarında çoğu davranış tarayıcı izni, dosya yolu, cache veya seçili dil durumuna bağlıdır. Sorunun hangi ekranda olduğunu söylersen daha net yönlendirebilirim."
+      : "Likely reason: in local web apps, most behavior depends on browser permissions, file paths, cache, or selected language state. Tell me the screen and I can guide more clearly.";
+  }
+
+  if (hasAny(text, ["nasil", "how"])) {
+    return lang === "tr"
+      ? "Genel yol şu: ilgili dosyayı güncelle, GitHub'a yükle, Pages deploy'unun bitmesini bekle, sonra sayfayı Ctrl+F5 ile yenile. Eski dosya kalırsa değişiklik görünmez."
+      : "General path: update the file, upload it to GitHub, wait for Pages deployment, then refresh with Ctrl+F5. If an old file is cached, the change will not appear.";
+  }
+
+  if (hasAny(text, ["ne", "what"])) {
+    return lang === "tr"
+      ? "Bunu bağlama göre cevaplayayım: Robo AI şu an sesli, iki modlu ve API'siz çalışan bir web asistanı. Daha özel bir şey sorarsan daha net cevap veririm."
+      : "In context: Robo AI is currently a voice-enabled, two-mode, API-free web assistant. Ask something more specific and I will answer more directly.";
+  }
+
   if (isQuestion(text)) {
     return lang === "tr"
-      ? "Bunu tam bir büyük model gibi çözemem, ama cümlendeki niyeti yakaladım. Daha net yazarsan yerel çekirdeğimle kısa ve doğrudan cevap vermeye çalışırım."
-      : "I cannot solve that like a full large model, but I caught the intent. If you write it more clearly, my local core will try to answer directly.";
+      ? answerGenericQuestion(message, lang)
+      : answerGenericQuestion(message, lang);
   }
 
   return lang === "tr"
@@ -1084,4 +1148,34 @@ function solveSimpleMath(text, lang) {
   return lang === "tr"
     ? `${expression.replace("*", " çarpı ").replace("/", " bölü ")} sonucu ${formatted}.`
     : `${expression} equals ${formatted}.`;
+}
+
+function explainMeaning(text, lang) {
+  if (hasAny(text, ["api"])) {
+    return lang === "tr"
+      ? "API, iki yazılımın birbiriyle konuşması için kullanılan arayüz demektir. Robo AI'de API olursa site dışarıdaki bir modele soru gönderebilir."
+      : "An API is an interface that lets two pieces of software talk to each other. In Robo AI, an API can send questions to an external model.";
+  }
+
+  if (hasAny(text, ["cache"])) {
+    return lang === "tr"
+      ? "Cache, tarayıcının dosyaları hız için saklamasıdır. Bazen eski app.js kalır; Ctrl+F5 bu yüzden işe yarar."
+      : "Cache means the browser stores files for speed. Sometimes an old app.js stays loaded; that is why Ctrl+F5 helps.";
+  }
+
+  if (hasAny(text, ["github pages", "pages"])) {
+    return lang === "tr"
+      ? "GitHub Pages, statik web sitelerini ücretsiz yayınlayan GitHub özelliğidir. HTML, CSS ve JS dosyalarını internete açar."
+      : "GitHub Pages is GitHub's free static website hosting. It publishes HTML, CSS, and JS files online.";
+  }
+
+  return lang === "tr"
+    ? "Anlam sorusu yakaladım. Hangi kelimeyi sorduğunu daha net yazarsan kısa bir açıklama yaparım."
+    : "I detected a meaning question. Write the exact word more clearly and I will explain it briefly.";
+}
+
+function answerGenericQuestion(message, lang) {
+  return lang === "tr"
+    ? `Buna kısa cevap vereyim: "${message}" için elimdeki yerel bilgiyle en mantıklı yol, konuyu küçük parçalara ayırmak ve önce görünen hatayı ya da hedefi netleştirmek. İstersen bunu adım adım açabilirim.`
+    : `Short answer: for "${message}", the best local answer is to break the topic into small parts and first clarify the visible error or goal. I can walk through it step by step.`;
 }
