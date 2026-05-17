@@ -1447,7 +1447,7 @@ const definitionKnowledge = {
     tr: "Sosyal medya, insanların internet üzerinden içerik paylaştığı, iletişim kurduğu ve etkileşime girdiği platformların genel adıdır.",
     en: "Social media is the general name for platforms where people share content, communicate, and interact over the internet."
   },
-  social media: {
+  "social media": {
     tr: "Sosyal medya, insanların internet üzerinden içerik paylaştığı, iletişim kurduğu ve etkileşime girdiği platformların genel adıdır.",
     en: "Social media is the general name for platforms where people share content, communicate, and interact over the internet."
   },
