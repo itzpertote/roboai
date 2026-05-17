@@ -14,7 +14,7 @@ const i18n = {
     send: "Gönder",
     clear: "Temizle",
     apiReady: "API bağlı",
-    apiDemo: "Demo",
+    apiDemo: "Yerel",
     apiError: "API hata",
     subtitleReady: "Robo AI hazır.",
     user: "Sen",
@@ -35,7 +35,7 @@ const i18n = {
     send: "Send",
     clear: "Clear",
     apiReady: "API ready",
-    apiDemo: "Demo",
+    apiDemo: "Local",
     apiError: "API error",
     subtitleReady: "Robo AI is ready.",
     user: "You",
@@ -72,7 +72,7 @@ let micStream = null;
 let levelAnimation = null;
 let speakingTimer = null;
 let history = [];
-let apiReachable = null;
+let apiReachable = false;
 let apiPillState = "demo";
 
 boot();
@@ -223,7 +223,7 @@ async function submitText(rawText) {
   setBusy(true);
 
   try {
-    if (apiReachable === false && !apiBase) {
+    if (!apiBase || apiReachable === false) {
       const reply = clientDemoReply(message);
       addMessage("assistant", reply);
       elements.subtitle.textContent = reply;
@@ -466,6 +466,12 @@ function pulseSubtitle(text) {
 }
 
 async function refreshApiStatus() {
+  if (!apiBase) {
+    apiReachable = false;
+    updateApiPill("demo");
+    return;
+  }
+
   try {
     const response = await fetch(apiUrl("/api/status"));
     if (!response.ok) {
@@ -501,7 +507,8 @@ function resolveApiBase() {
     return fromQuery;
   }
 
-  return normalizeApiBase(localStorage.getItem(apiBaseStorageKey));
+  localStorage.removeItem(apiBaseStorageKey);
+  return "";
 }
 
 function normalizeApiBase(value) {
