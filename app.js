@@ -80,12 +80,17 @@ let voicesLoaded = false;
 boot();
 
 function boot() {
-  //primeVoices();
-  setLanguage(language);
-  configureRecognition();
-  bindEvents();
-  refreshApiStatus();
-  setState("idle");
+  // Eski hata veren primeVoices(); satırını buradan tamamen kaldırdık!
+  
+  setupDOM();
+  setupSpeechRecognition();
+  
+  // Eğer sisteminde default olarak apiBase varsa bağla, yoksa local moda al
+  if (apiBase) {
+    checkApiStatus();
+  } else {
+    setApiStatus("demo");
+  }
 }
 
 function bindEvents() {
