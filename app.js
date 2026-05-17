@@ -310,67 +310,9 @@ function addMessage(role, text, options = {}) {
   elements.messages.scrollTop = elements.messages.scrollHeight;
 }
 
-async function speak(text) {
-  if (!synth || !text) {
-    setState("idle");
-    return;
-  }
-
-  synth.cancel();
-
-  // MIX modundaysa İngilizce, değilse Türkçe dil kodu ayarla
-  const spokenLanguage = language === "en" ? "en-US" : "tr-TR";
-
-  // İngilizce metne hiç dokunma (temiz kalsın), Türkçe ise karakterleri hazırla
-  const speechText = language === "en" ? text : prepareSpeechText(text, language);
-  
-  const utterance = new SpeechSynthesisUtterance(speechText);
-  utterance.lang = spokenLanguage;
-  utterance.rate = 0.95;
-  utterance.pitch = 1;
-  utterance.volume = 1;
-
-  // Bilgisayar/Telefon sistemindeki sesleri kontrol et
-  const voices = synth.getVoices();
-  if (voices.length > 0) {
-    // 1. Tercih: Tam eşleşen dili bul (en-US veya tr-TR)
-    let matchedVoice = voices.find(v => v.lang.toLowerCase() === spokenLanguage.toLowerCase());
-    
-    // 2. Tercih: Tam eşleşme yoksa ana dile göre bul (en-GB, en-AU vb.)
-    if (!matchedVoice) {
-      const baseLang = spokenLanguage.split('-')[0].toLowerCase();
-      matchedVoice = voices.find(v => v.lang.toLowerCase().startsWith(baseLang));
-    }
-
-    if (matchedVoice) {
-      utterance.voice = matchedVoice;
-      utterance.lang = matchedVoice.lang;
-    }
-  }
-
-  utterance.onstart = () => {
-    setState("speaking");
-    startSyntheticSpeechLevel();
-  };
-
-  utterance.onend = () => {
-    stopSyntheticSpeechLevel();
-    setState("idle");
-  };
-
-  utterance.onerror = () => {
-    stopSyntheticSpeechLevel();
-    setState("idle");
-  };
-
-  synth.speak(utterance);
-}
-
-// Eski kafa karıştıran ses seçme fonksiyonlarını çöpe attık, burası temizlendi!
-
 function prepareSpeechText(text, lang) {
   if (lang === "en") {
-    return text; // İngilizce ise kelimeleri asla bozma
+    return text; // İngilizce ise kelimeleri asla bozma, orijinal bırak
   }
 
   let spoken = ` ${text} `;
@@ -382,80 +324,12 @@ function prepareSpeechText(text, lang) {
   spoken = spoken.replace(/🔥/g, " ateş ");
   spoken = spoken.replace(/💻/g, " bilgisayar ");
   spoken = spoken.replace(/🚀/g, " roket ");
-  return spoken;
-}
 
-  const replacements = [
-    [/\bRobo AI\b/gi, "Robo ey ay"],
-    [/\bOpenAI\b/gi, "Open ey ay"],
-    [/\bOpenRouter\b/gi, "Open rautır"],
-    [/\bGitHub\b/gi, "githab"],
-    [/\bCloudflare\b/gi, "klaud fler"],
-    [/\bWorker\b/gi, "vörkır"],
-    [/\bAPI\b/gi, "ey pi ay"],
-    [/\bAI\b/gi, "ey ay"],
-    [/\bGPT\b/gi, "ci pi ti"],
-    [/\bCSS\b/gi, "si es es"],
-    [/\bJS\b/gi, "cey es"],
-    [/\bHTML\b/gi, "eyç ti em el"],
-    [/\bHTTPS\b/gi, "eyç ti ti pi es"],
-    [/\bHTTP\b/gi, "eyç ti ti pi"],
-    [/\bURL\b/gi, "yu ar el"],
-    [/\bEN\b/g, "i en"],
-    [/\bTR\b/g, "te re"],
-    [/\bChrome\b/gi, "krom"],
-    [/\bEdge\b/g, "eç"],
-    [/\bPages\b/g, "peyciz"],
-    [/\bGit\b/g, "git"],
-    [/\blocal\b/gi, "lokal"],
-    [/\bcore\b/gi, "kor"],
-    [/\bvoice\b/gi, "voys"],
-    [/\btext\b/gi, "tekst"],
-    [/\bsubtitle\b/gi, "sab taytıl"],
-    [/\bbrowser\b/gi, "brauzır"],
-    [/\bcache\b/gi, "keş"],
-    [/\bdeploy\b/gi, "diploy"],
-    [/\bmodel\b/gi, "model"],
-    [/\bmini\b/gi, "mini"],
-    [/\bfree\b/gi, "fri"]
-  ];
-
-  for (const [pattern, replacement] of replacements) {
-    spoken = spoken.replace(pattern, replacement);
-  }
-
-  spoken = spoken.replace(/\b[A-Z]{2,}\b/g, word => spellAcronymForTurkish(word));
-
+  // Fonksiyonu burada güvenli bir şekilde kapatıyoruz:
   return spoken
     .replace(/\s+/g, " ")
     .trim();
-}
-
-function phoneticizeEnglishSentence(text) {
-  return String(text || "")
-    .replace(/[A-Za-z][A-Za-z0-9.+#'-]*/g, word => phoneticizeEnglishWord(word))
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function phoneticizeEnglishWord(word) {
-  const exact = englishPhoneticDictionary[word.toLowerCase()];
-  if (exact) {
-    return exact;
-  }
-
-  if (/^[A-Z]{2,}$/.test(word)) {
-    return spellAcronymForTurkish(word);
-  }
-
-  const suffix = word.match(/([.,!?;:]+)$/)?.[1] || "";
-  const core = suffix ? word.slice(0, -suffix.length) : word;
-  const lower = core.toLowerCase();
-
-  if (!/[a-z]/.test(lower)) {
-    return word;
-  }
-
+} // <-- Bu parantez fonksiyonu kapatarak aşağıdaki kodları korur!
   let spoken = lower
     .replace(/tion\b/g, "şın")
     .replace(/sion\b/g, "jın")
