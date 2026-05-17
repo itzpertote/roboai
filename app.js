@@ -318,10 +318,10 @@ async function speak(text) {
 
   synth.cancel();
 
-  // 1. Dil MIX (en) ise "en-US", TR ise "tr-TR" yapıyoruz
+  // MIX modundaysa İngilizce, değilse Türkçe dil kodu ayarla
   const spokenLanguage = language === "en" ? "en-US" : "tr-TR";
 
-  // 2. İngilizce ise metne dokunmuyoruz, Türkçe ise dönüştürüyoruz
+  // İngilizce metne hiç dokunma (temiz kalsın), Türkçe ise karakterleri hazırla
   const speechText = language === "en" ? text : prepareSpeechText(text, language);
   
   const utterance = new SpeechSynthesisUtterance(speechText);
@@ -330,17 +330,21 @@ async function speak(text) {
   utterance.pitch = 1;
   utterance.volume = 1;
 
-  // 3. BURASI ÇOK KRİTİK: Bilgisayardaki seslerden dile tam uygun olanı seçtiriyoruz
+  // Bilgisayar/Telefon sistemindeki sesleri kontrol et
   const voices = synth.getVoices();
   if (voices.length > 0) {
-    // Eğer dil en-US ise içinde "en" geçen bir ses, tr-TR ise "tr" geçen bir ses buluyoruz
-    const matchingVoice = voices.find(v => 
-      v.lang.toLowerCase() === spokenLanguage.toLowerCase() || 
-      v.lang.toLowerCase().startsWith(spokenLanguage.split('-')[0])
-    );
-    if (matchingVoice) {
-      utterance.voice = matchingVoice;
-      utterance.lang = matchingVoice.lang;
+    // 1. Tercih: Tam eşleşen dili bul (en-US veya tr-TR)
+    let matchedVoice = voices.find(v => v.lang.toLowerCase() === spokenLanguage.toLowerCase());
+    
+    // 2. Tercih: Tam eşleşme yoksa ana dile göre bul (en-GB, en-AU vb.)
+    if (!matchedVoice) {
+      const baseLang = spokenLanguage.split('-')[0].toLowerCase();
+      matchedVoice = voices.find(v => v.lang.toLowerCase().startsWith(baseLang));
+    }
+
+    if (matchedVoice) {
+      utterance.voice = matchedVoice;
+      utterance.lang = matchedVoice.lang;
     }
   }
 
@@ -361,90 +365,25 @@ async function speak(text) {
 
   synth.speak(utterance);
 }
-async function chooseVoice(lang) {
-  const voices = await getVoices();
-  const target = lang.toLowerCase();
-  const base = target.slice(0, 2);
-  const scored = voices
-    .map(voice => ({ voice, score: scoreVoice(voice, target, base) }))
-    .filter(item => item.score > 0)
-    .sort((a, b) => b.score - a.score);
 
-  return scored[0]?.voice
-    || null;
-}
-
-function primeVoices() {
-  if (!synth) {
-    return;
-  }
-
-  const updateVoices = () => {
-    availableVoices = synth.getVoices();
-    voicesLoaded = availableVoices.length > 0;
-  };
-
-  updateVoices();
-
-  if ("onvoiceschanged" in synth) {
-    synth.onvoiceschanged = updateVoices;
-  }
-}
-
-function getVoices() {
-  if (!synth) {
-    return Promise.resolve([]);
-  }
-
-  availableVoices = synth.getVoices();
-  if (availableVoices.length || voicesLoaded) {
-    return Promise.resolve(availableVoices);
-  }
-
-  return new Promise(resolve => {
-    const timeout = window.setTimeout(() => {
-      availableVoices = synth.getVoices();
-      resolve(availableVoices);
-    }, 900);
-
-    synth.onvoiceschanged = () => {
-      window.clearTimeout(timeout);
-      availableVoices = synth.getVoices();
-      voicesLoaded = availableVoices.length > 0;
-      resolve(availableVoices);
-    };
-  });
-}
-
-function scoreVoice(voice, target, base) {
-  const voiceLang = voice.lang.toLowerCase();
-  const voiceName = voice.name.toLowerCase();
-
-  if (voiceLang === target) {
-    return 100;
-  }
-
-  if (voiceLang.startsWith(`${base}-`)) {
-    return 80;
-  }
-
-  if (base === "en" && voiceName.includes("english")) {
-    return 65;
-  }
-
-  if (base === "tr" && (voiceName.includes("turkish") || voiceName.includes("turk"))) {
-    return 65;
-  }
-
-  return voiceLang.startsWith(base) ? 50 : 0;
-}
+// Eski kafa karıştıran ses seçme fonksiyonlarını çöpe attık, burası temizlendi!
 
 function prepareSpeechText(text, lang) {
   if (lang === "en") {
-    return text;
+    return text; // İngilizce ise kelimeleri asla bozma
   }
 
   let spoken = ` ${text} `;
+  spoken = spoken.replace(/ai/gi, "ey ay");
+  spoken = spoken.replace(/ui/gi, "yu ay");
+  spoken = spoken.replace(/io/gi, "yo");
+  spoken = spoken.replace(/🤖/g, " robot ");
+  spoken = spoken.replace(/✨/g, " yıldız ");
+  spoken = spoken.replace(/🔥/g, " ateş ");
+  spoken = spoken.replace(/💻/g, " bilgisayar ");
+  spoken = spoken.replace(/🚀/g, " roket ");
+  return spoken;
+}
 
   const replacements = [
     [/\bRobo AI\b/gi, "Robo ey ay"],
