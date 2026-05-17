@@ -80,7 +80,7 @@ let voicesLoaded = false;
 boot();
 
 function boot() {
-  primeVoices();
+  //primeVoices();
   setLanguage(language);
   configureRecognition();
   bindEvents();
