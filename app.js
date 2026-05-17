@@ -83,7 +83,7 @@ function boot() {
   // Eski hata veren primeVoices(); satırını buradan tamamen kaldırdık!
   
   setupDOM();
-  setupSpeechRecognition();
+  configureRecognition();
   
   // Eğer sisteminde default olarak apiBase varsa bağla, yoksa local moda al
   if (apiBase) {
