@@ -330,44 +330,6 @@ function prepareSpeechText(text, lang) {
     .replace(/\s+/g, " ")
     .trim();
 } // <-- Bu parantez fonksiyonu kapatarak aşağıdaki kodları korur!
-  let spoken = lower
-    .replace(/tion\b/g, "şın")
-    .replace(/sion\b/g, "jın")
-    .replace(/ough/g, "of")
-    .replace(/augh/g, "af")
-    .replace(/ph/g, "f")
-    .replace(/sh/g, "ş")
-    .replace(/ch/g, "ç")
-    .replace(/th/g, "d")
-    .replace(/ck/g, "k")
-    .replace(/qu/g, "kv")
-    .replace(/x/g, "ks")
-    .replace(/oo/g, "u")
-    .replace(/ee/g, "i")
-    .replace(/ea/g, "i")
-    .replace(/ai/g, "ey")
-    .replace(/ay/g, "ey")
-    .replace(/oa/g, "ou")
-    .replace(/ow/g, "au")
-    .replace(/ou/g, "au")
-    .replace(/ie/g, "ay")
-    .replace(/igh/g, "ay")
-    .replace(/er\b/g, "ır")
-    .replace(/or\b/g, "ır")
-    .replace(/ing\b/g, "ing")
-    .replace(/ed\b/g, "d")
-    .replace(/c([eiy])/g, "s$1")
-    .replace(/c/g, "k")
-    .replace(/j/g, "c")
-    .replace(/w/g, "v")
-    .replace(/y\b/g, "i")
-    .replace(/y/g, "y")
-    .replace(/a/g, "e")
-    .replace(/i/g, "i")
-    .replace(/u/g, "u");
-
-  return `${spoken}${suffix}`;
-}
 
 const englishPhoneticDictionary = {
   a: "e",
