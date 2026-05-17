@@ -994,8 +994,8 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["tesekkur", "sag ol", "eyvallah", "thanks", "thank you"])) {
     return lang === "tr"
-      ? "Rica ederim. Buradayım, devam edebiliriz."
-      : "You are welcome. I am here, we can continue.";
+      ? "Rica ederim. Başka bir şeye ihtiyacın olursa buradayım."
+      : "You are welcome. Just let me know if you need any help.";
   }
 
   if (hasAny(text, ["gorusuruz", "bye", "goodbye", "cikis", "kapat"])) {
