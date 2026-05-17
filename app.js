@@ -317,22 +317,31 @@ async function speak(text) {
   }
 
   synth.cancel();
-  
-  // HATA BURADAYDI: Dil ne olursa olsun "tr-TR" seçiliyordu.
-  // Şimdi eğer seçili dil "en" (yani MIX) ise "en-US", değilse "tr-TR" yapıyoruz:
+
+  // 1. Dil MIX (en) ise "en-US", TR ise "tr-TR" yapıyoruz
   const spokenLanguage = language === "en" ? "en-US" : "tr-TR";
+
+  // 2. İngilizce ise metne dokunmuyoruz, Türkçe ise dönüştürüyoruz
+  const speechText = language === "en" ? text : prepareSpeechText(text, language);
   
-  const speechText = prepareSpeechText(text, language);
   const utterance = new SpeechSynthesisUtterance(speechText);
   utterance.lang = spokenLanguage;
-  utterance.rate = 0.96;
+  utterance.rate = 0.95;
   utterance.pitch = 1;
   utterance.volume = 1;
 
-  const voice = await chooseVoice(spokenLanguage);
-  if (voice) {
-    utterance.voice = voice;
-    utterance.lang = voice.lang;
+  // 3. BURASI ÇOK KRİTİK: Bilgisayardaki seslerden dile tam uygun olanı seçtiriyoruz
+  const voices = synth.getVoices();
+  if (voices.length > 0) {
+    // Eğer dil en-US ise içinde "en" geçen bir ses, tr-TR ise "tr" geçen bir ses buluyoruz
+    const matchingVoice = voices.find(v => 
+      v.lang.toLowerCase() === spokenLanguage.toLowerCase() || 
+      v.lang.toLowerCase().startsWith(spokenLanguage.split('-')[0])
+    );
+    if (matchingVoice) {
+      utterance.voice = matchingVoice;
+      utterance.lang = matchingVoice.lang;
+    }
   }
 
   utterance.onstart = () => {
@@ -352,7 +361,6 @@ async function speak(text) {
 
   synth.speak(utterance);
 }
-
 async function chooseVoice(lang) {
   const voices = await getVoices();
   const target = lang.toLowerCase();
