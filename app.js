@@ -320,6 +320,34 @@ function prepareSpeechText(text, lang) {
     return text; // İngilizce ise kelimeleri asla bozma, orijinal bırak
   }
 
+  function setupDOM() {
+  const micBtn = document.getElementById("micButton");
+  const compForm = document.getElementById("composer");
+  const txtInput = document.getElementById("textInput");
+  const clearBtn = document.getElementById("clearButton");
+  const segments = document.querySelectorAll(".language-switch .segment");
+
+  if (micBtn) {
+    micBtn.addEventListener("click", toggleListening);
+  }
+  if (compForm) {
+    compForm.addEventListener("submit", handleComposerSubmit);
+  }
+  if (txtInput) {
+    txtInput.addEventListener("keydown", handleInputKeyDown);
+  }
+  if (clearBtn) {
+    clearBtn.addEventListener("click", clearConversation);
+  }
+  segments.forEach(btn => {
+    btn.addEventListener("click", () => {
+      segments.forEach(s => s.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      setLanguage(btn.getAttribute("data-lang"));
+    });
+  });
+}
+
   let spoken = ` ${text} `;
   spoken = spoken.replace(/ai/gi, "ey ay");
   spoken = spoken.replace(/ui/gi, "yu ay");
