@@ -226,17 +226,30 @@ async function submitText(rawText) {
   elements.subtitle.textContent = message;
   setState("thinking");
   setBusy(true);
+  const searchQuery = getWebSearchQuery(message);
 
   try {
+    if (searchQuery) {
+      const reply = await searchWeb(searchQuery);
+      elements.subtitle.textContent = reply;
+      updateApiPill("demo");
+      speak(reply);
+      return;
+    }
+
     const reply = clientDemoReply(message);
     addMessage("assistant", reply);
     elements.subtitle.textContent = reply;
     updateApiPill("demo");
     speak(reply);
   } catch (error) {
-    const copy = language === "tr"
-      ? "Yerel çekirdek şu an cevap üretemedi. Biraz daha kısa yazıp tekrar dener misin?"
-      : "The local core could not answer right now. Try a shorter message and send it again.";
+    const copy = searchQuery
+      ? (language === "tr"
+        ? `Web araması çalışmadı: ${error.message}`
+        : `Web search did not work: ${error.message}`)
+      : (language === "tr"
+        ? "Yerel çekirdek şu an cevap üretemedi. Biraz daha kısa yazıp tekrar dener misin?"
+        : "The local core could not answer right now. Try a shorter message and send it again.");
     addMessage("assistant", copy);
     elements.subtitle.textContent = copy;
     updateApiPill("demo");
@@ -246,7 +259,7 @@ async function submitText(rawText) {
   }
 }
 
-function addMessage(role, text) {
+function addMessage(role, text, options = {}) {
   const clean = sanitizeTranscript(text);
   if (!clean) {
     return;
@@ -265,6 +278,32 @@ function addMessage(role, text) {
   const body = document.createElement("div");
   body.className = "message-text";
   body.textContent = clean;
+
+  if (Array.isArray(options.results) && options.results.length) {
+    const list = document.createElement("div");
+    list.className = "search-results";
+
+    for (const result of options.results) {
+      const link = document.createElement("a");
+      link.className = "search-result";
+      link.href = result.link;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+
+      const title = document.createElement("span");
+      title.className = "search-title";
+      title.textContent = result.title;
+
+      const snippet = document.createElement("span");
+      snippet.className = "search-snippet";
+      snippet.textContent = result.snippet;
+
+      link.append(title, snippet);
+      list.append(link);
+    }
+
+    body.append(list);
+  }
 
   message.append(label, body);
   elements.messages.append(message);
@@ -847,10 +886,14 @@ function resolveApiBase() {
 }
 
 function normalizeApiBase(value) {
-  const raw = String(value || "").trim().replace(/\/+$/, "");
+  let raw = String(value || "").trim().replace(/\/+$/, "");
 
   if (!raw) {
     return "";
+  }
+
+  if (!/^https?:\/\//i.test(raw)) {
+    raw = `https://${raw}`;
   }
 
   try {
@@ -869,13 +912,78 @@ function clientDemoReply(message) {
   return localBrainReply(message, language);
 }
 
+function getWebSearchQuery(message) {
+  const original = sanitizeTranscript(message);
+  const normalized = normalizeForIntent(original);
+  const startPatterns = [
+    "webde ara",
+    "web de ara",
+    "internette ara",
+    "google da ara",
+    "googleda ara",
+    "arama yap",
+    "search web for",
+    "search for"
+  ];
+
+  for (const pattern of startPatterns) {
+    const normalizedPattern = normalizeForIntent(pattern);
+    if (normalized.startsWith(normalizedPattern)) {
+      const query = original.split(/\s+/).slice(pattern.split(/\s+/).length).join(" ").replace(/^[:,-]+/, "").trim();
+      return query.length >= 2 ? query : "";
+    }
+  }
+
+  const trailing = normalized.match(/(.+)\s+(?:webde|internette|googleda|google da)\s+ara$/);
+  if (trailing) {
+    return trailing[1].trim();
+  }
+
+  return "";
+}
+
+async function searchWeb(query) {
+  if (!apiBase) {
+    const reply = language === "tr"
+      ? "Web araması için Cloudflare Worker bağlantısı gerekiyor. Siteyi bir kez ?api=https://worker-adresin.workers.dev ile açmalısın."
+      : "Web search needs the Cloudflare Worker connection. Open the site once with ?api=https://your-worker.workers.dev.";
+    addMessage("assistant", reply);
+    return reply;
+  }
+
+  const searching = language === "tr"
+    ? `Web'de arıyorum: ${query}`
+    : `Searching the web for: ${query}`;
+  elements.subtitle.textContent = searching;
+
+  const response = await fetch(apiUrl("/api/search"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, language })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || "Search failed");
+  }
+
+  const reply = data.summary || (language === "tr" ? "Arama tamamlandı." : "Search complete.");
+  addMessage("assistant", reply, { results: data.results || [] });
+  return reply;
+}
+
 function localBrainReply(message, lang) {
   const text = normalizeForIntent(message);
   const now = new Date();
   const mathAnswer = solveSimpleMath(text, lang);
+  const definitionAnswer = answerDefinitionQuestion(message, text, lang);
 
   if (mathAnswer) {
     return mathAnswer;
+  }
+
+  if (definitionAnswer) {
+    return definitionAnswer;
   }
 
   if (hasAny(text, ["merhaba", "selam", "slm", "sa", "hello", "hi", "hey", "good morning", "good evening"])) {
@@ -1074,7 +1182,7 @@ function localBrainReply(message, lang) {
       : "General path: update the file, upload it to GitHub, wait for Pages deployment, then refresh with Ctrl+F5. If an old file is cached, the change will not appear.";
   }
 
-  if (hasAny(text, ["ne", "what"])) {
+  if (isAboutRoboContext(text) && hasAny(text, ["ne", "what"])) {
     return lang === "tr"
       ? "Bunu bağlama göre cevaplayayım: Robo AI şu an sesli, iki modlu ve API'siz çalışan bir web asistanı. Daha özel bir şey sorarsan daha net cevap veririm."
       : "In context: Robo AI is currently a voice-enabled, two-mode, API-free web assistant. Ask something more specific and I will answer more directly.";
@@ -1149,6 +1257,98 @@ function solveSimpleMath(text, lang) {
     ? `${expression.replace("*", " çarpı ").replace("/", " bölü ")} sonucu ${formatted}.`
     : `${expression} equals ${formatted}.`;
 }
+
+function answerDefinitionQuestion(originalMessage, text, lang) {
+  const subject = extractDefinitionSubject(originalMessage, text);
+  if (!subject) {
+    return "";
+  }
+
+  const key = normalizeForIntent(subject);
+  const known = definitionKnowledge[key] || Object.entries(definitionKnowledge)
+    .find(([name]) => key.includes(name) || name.includes(key))?.[1];
+
+  if (known) {
+    return lang === "tr" ? known.tr : known.en;
+  }
+
+  return lang === "tr"
+    ? `${subject} için kısa tanım: Bu bir kavram, nesne ya da konu olabilir. Yerel bilgimde özel tanımı yok; web araması bağlıysa "webde ara ${subject}" diyerek güncel bilgi aratabilirsin.`
+    : `Short definition for ${subject}: it may be a concept, object, or topic. I do not have a specific local definition for it; if web search is connected, say "search for ${subject}".`;
+}
+
+function extractDefinitionSubject(originalMessage, text) {
+  const patterns = [
+    /(.+?)\s+(?:nedir|ne demek|ne anlama gelir)\??$/,
+    /(?:nedir|ne demek)\s+(.+?)\??$/,
+    /what is\s+(.+?)\??$/,
+    /what are\s+(.+?)\??$/,
+    /define\s+(.+?)\??$/
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match?.[1]) {
+      return restoreSubjectCasing(originalMessage, match[1]);
+    }
+  }
+
+  return "";
+}
+
+function restoreSubjectCasing(originalMessage, normalizedSubject) {
+  const originalWords = sanitizeTranscript(originalMessage).replace(/[?!.]+$/, "").split(/\s+/);
+  const normalizedWords = normalizeForIntent(normalizedSubject).split(/\s+/);
+  const matched = originalWords.filter(word => normalizedWords.includes(normalizeForIntent(word)));
+  return (matched.length ? matched.join(" ") : normalizedSubject).trim();
+}
+
+function isAboutRoboContext(text) {
+  return hasAny(text, ["robo", "robo ai", "bu site", "site", "uygulama", "asistan", "assistant", "this app", "this site"]);
+}
+
+const definitionKnowledge = {
+  domates: {
+    tr: "Domates, genelde sebze gibi kullanılan ama botanik olarak meyve sayılan kırmızı, sulu bir bitki ürünüdür. Salatada, yemekte, sosta ve salçada çok kullanılır.",
+    en: "A tomato is a red, juicy plant fruit that is commonly used like a vegetable. It is used in salads, meals, sauces, and paste."
+  },
+  api: {
+    tr: "API, iki yazılımın birbiriyle konuşmasını sağlayan arayüzdür. Bir site API sayesinde başka bir servisten veri veya cevap alabilir.",
+    en: "An API is an interface that lets two software systems talk to each other. A site can use an API to get data or responses from another service."
+  },
+  "github pages": {
+    tr: "GitHub Pages, HTML, CSS ve JavaScript dosyalarını ücretsiz statik web sitesi olarak yayınlayan GitHub özelliğidir.",
+    en: "GitHub Pages is a GitHub feature that publishes HTML, CSS, and JavaScript files as a free static website."
+  },
+  "robo ai": {
+    tr: "Robo AI, bu projede çalışan sesli web asistanıdır. Konuşmayı yazıya çevirir, yerel cevap üretir ve cevabı sesli okur.",
+    en: "Robo AI is the voice web assistant in this project. It converts speech to text, creates local replies, and reads them aloud."
+  },
+  yapayzeka: {
+    tr: "Yapay zeka, bilgisayarların öğrenme, anlama, karar verme veya içerik üretme gibi insan benzeri görevleri yapmasını sağlayan teknolojilerin genel adıdır.",
+    en: "Artificial intelligence is the general name for technologies that let computers perform human-like tasks such as learning, understanding, deciding, or generating content."
+  },
+  "yapay zeka": {
+    tr: "Yapay zeka, bilgisayarların öğrenme, anlama, karar verme veya içerik üretme gibi insan benzeri görevleri yapmasını sağlayan teknolojilerin genel adıdır.",
+    en: "Artificial intelligence is the general name for technologies that let computers perform human-like tasks such as learning, understanding, deciding, or generating content."
+  },
+  internet: {
+    tr: "İnternet, dünya genelindeki bilgisayarların ve sunucuların birbirine bağlı olduğu büyük ağ sistemidir.",
+    en: "The internet is the global network system that connects computers and servers around the world."
+  },
+  tarayici: {
+    tr: "Tarayıcı, web sitelerini açmak için kullanılan uygulamadır. Chrome, Edge, Firefox ve Safari buna örnektir.",
+    en: "A browser is an app used to open websites. Chrome, Edge, Firefox, and Safari are examples."
+  },
+  mikrofon: {
+    tr: "Mikrofon, sesi elektriksel veya dijital sinyale çeviren giriş cihazıdır. Robo AI bunu konuşmanı yazıya çevirmek için kullanır.",
+    en: "A microphone is an input device that turns sound into an electrical or digital signal. Robo AI uses it to convert speech to text."
+  },
+  cache: {
+    tr: "Cache, tarayıcının dosyaları daha hızlı açmak için saklamasıdır. Eski dosya kalırsa Ctrl+F5 ile yenilemek işe yarar.",
+    en: "Cache is stored browser data used to load files faster. If an old file stays cached, Ctrl+F5 can help refresh it."
+  }
+};
 
 function explainMeaning(text, lang) {
   if (hasAny(text, ["api"])) {
