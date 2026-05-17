@@ -1000,8 +1000,8 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["gorusuruz", "bye", "goodbye", "cikis", "kapat"])) {
     return lang === "tr"
-      ? "Görüşürüz. Tekrar konuşmak istersen mikrofon veya mesaj kutusu hazır."
-      : "Goodbye. If you want to talk again, the microphone and text box are ready.";
+      ? "Görüşürüz. Tekrar konuşmak istersen buradayım."
+      : "Goodbye. If you want to talk again, I'm here.";
   }
 
   if (hasAny(text, ["saat", "kac oldu", "time", "what time"])) {
