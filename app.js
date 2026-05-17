@@ -89,7 +89,7 @@ function boot() {
   if (apiBase) {
     checkApiStatus();
   } else {
-    setApiStatus("demo");
+    updateApiPill("demo");
   }
 }
 
