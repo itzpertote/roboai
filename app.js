@@ -344,7 +344,7 @@ function setupDOM() {
   const segments = document.querySelectorAll(".language-switch .segment");
 
   if (micBtn) {
-    micBtn.addEventListener("click", toggleListening);
+    micBtn.addEventListener("click", toggleMic);
   }
   if (compForm) {
     compForm.addEventListener("submit", handleComposerSubmit);
