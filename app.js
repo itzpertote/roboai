@@ -364,6 +364,36 @@ function setupDOM() {
   });
 }
 
+function speak(text) {
+  if (!text || !synth) { setState("idle"); return; }
+
+  synth.cancel();
+  stopSyntheticSpeechLevel();
+
+  const prepared = prepareSpeechText(text, language);
+  const utterance = new SpeechSynthesisUtterance(prepared);
+
+  const voices = synth.getVoices();
+  const langCode = language === "tr" ? "tr" : "en";
+  const match = voices.find(v => v.lang.toLowerCase().startsWith(langCode));
+  if (match) utterance.voice = match;
+
+  utterance.lang   = language === "tr" ? "tr-TR" : "en-US";
+  utterance.rate   = 0.96;
+  utterance.pitch  = 1.0;
+  utterance.volume = 1.0;
+
+  utterance.onstart = () => { setState("speaking"); startSyntheticSpeechLevel(); };
+  utterance.onend   = () => { stopSyntheticSpeechLevel(); setState("idle"); elements.subtitle.dataset.locked = ""; };
+  utterance.onerror = () => { stopSyntheticSpeechLevel(); setState("idle"); };
+
+  if (voices.length === 0) {
+    synth.addEventListener("voiceschanged", () => synth.speak(utterance), { once: true });
+  } else {
+    synth.speak(utterance);
+  }
+}  // ← speak closes HERE
+
 const englishPhoneticDictionary = {
   a: "e",
   about: "ebaut",
