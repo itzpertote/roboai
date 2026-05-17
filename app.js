@@ -382,9 +382,19 @@ function speak(text) {
   const utterance = new SpeechSynthesisUtterance(prepared);
 
   const voices = synth.getVoices();
-  const langCode = language === "tr" ? "tr" : "en";
-  const match = voices.find(v => v.lang.toLowerCase().startsWith(langCode));
+if (language === "tr") {
+  const match = voices.find(v => v.lang.toLowerCase().startsWith("tr"));
   if (match) utterance.voice = match;
+} else {
+  // Prefer en-US, then en-GB, then any English voice
+  const match =
+    voices.find(v => v.lang === "en-US") ||
+    voices.find(v => v.lang === "en-GB") ||
+    voices.find(v => v.lang.toLowerCase().startsWith("en"));
+  if (match) utterance.voice = match;
+  // If still no English voice found, don't set one —
+  // utterance.lang = "en-US" below will guide the browser
+}
 
   utterance.lang   = language === "tr" ? "tr-TR" : "en-US";
   utterance.rate   = 0.96;
