@@ -1763,4 +1763,4 @@ function answerGenericQuestion(message, lang) {
   return lang === "tr"
     ? `Buna kısa cevap vereyim: "${message}" için elimdeki yerel bilgiyle en mantıklı yol, konuyu küçük parçalara ayırmak ve önce görünen hatayı ya da hedefi netleştirmek. İstersen bunu adım adım açabilirim.`
     : `Short answer: for "${message}", the best local answer is to break the topic into small parts and first clarify the visible error or goal. I can walk through it step by step.`;
-}
+};
