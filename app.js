@@ -44,7 +44,7 @@ const i18n = {
     empty: "Type a message or open the microphone.",
     transcriptLow: "Subtitle checked",
     transcriptLive: "Live subtitle",
-    language: "EN"
+    language: "MIX"
   }
 };
 
@@ -278,8 +278,9 @@ async function speak(text) {
   }
 
   synth.cancel();
-  const spokenLanguage = language === "tr" ? "tr-TR" : "en-US";
-  const utterance = new SpeechSynthesisUtterance(text);
+  const spokenLanguage = "tr-TR";
+  const speechText = prepareSpeechText(text, language);
+  const utterance = new SpeechSynthesisUtterance(speechText);
   utterance.lang = spokenLanguage;
   utterance.rate = 0.96;
   utterance.pitch = 1;
@@ -385,6 +386,316 @@ function scoreVoice(voice, target, base) {
   }
 
   return voiceLang.startsWith(base) ? 50 : 0;
+}
+
+function prepareSpeechText(text, lang) {
+  if (lang === "en") {
+    return phoneticizeEnglishSentence(text);
+  }
+
+  let spoken = ` ${text} `;
+
+  const replacements = [
+    [/\bRobo AI\b/gi, "Robo ey ay"],
+    [/\bOpenAI\b/gi, "Open ey ay"],
+    [/\bOpenRouter\b/gi, "Open rautır"],
+    [/\bGitHub\b/gi, "githab"],
+    [/\bCloudflare\b/gi, "klaud fler"],
+    [/\bWorker\b/gi, "vörkır"],
+    [/\bAPI\b/gi, "ey pi ay"],
+    [/\bAI\b/gi, "ey ay"],
+    [/\bGPT\b/gi, "ci pi ti"],
+    [/\bCSS\b/gi, "si es es"],
+    [/\bJS\b/gi, "cey es"],
+    [/\bHTML\b/gi, "eyç ti em el"],
+    [/\bHTTPS\b/gi, "eyç ti ti pi es"],
+    [/\bHTTP\b/gi, "eyç ti ti pi"],
+    [/\bURL\b/gi, "yu ar el"],
+    [/\bEN\b/g, "i en"],
+    [/\bTR\b/g, "te re"],
+    [/\bChrome\b/gi, "krom"],
+    [/\bEdge\b/g, "eç"],
+    [/\bPages\b/g, "peyciz"],
+    [/\bGit\b/g, "git"],
+    [/\blocal\b/gi, "lokal"],
+    [/\bcore\b/gi, "kor"],
+    [/\bvoice\b/gi, "voys"],
+    [/\btext\b/gi, "tekst"],
+    [/\bsubtitle\b/gi, "sab taytıl"],
+    [/\bbrowser\b/gi, "brauzır"],
+    [/\bcache\b/gi, "keş"],
+    [/\bdeploy\b/gi, "diploy"],
+    [/\bmodel\b/gi, "model"],
+    [/\bmini\b/gi, "mini"],
+    [/\bfree\b/gi, "fri"]
+  ];
+
+  for (const [pattern, replacement] of replacements) {
+    spoken = spoken.replace(pattern, replacement);
+  }
+
+  spoken = spoken.replace(/\b[A-Z]{2,}\b/g, word => spellAcronymForTurkish(word));
+
+  return spoken
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function phoneticizeEnglishSentence(text) {
+  return String(text || "")
+    .replace(/[A-Za-z][A-Za-z0-9.+#'-]*/g, word => phoneticizeEnglishWord(word))
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function phoneticizeEnglishWord(word) {
+  const exact = englishPhoneticDictionary[word.toLowerCase()];
+  if (exact) {
+    return exact;
+  }
+
+  if (/^[A-Z]{2,}$/.test(word)) {
+    return spellAcronymForTurkish(word);
+  }
+
+  const suffix = word.match(/([.,!?;:]+)$/)?.[1] || "";
+  const core = suffix ? word.slice(0, -suffix.length) : word;
+  const lower = core.toLowerCase();
+
+  if (!/[a-z]/.test(lower)) {
+    return word;
+  }
+
+  let spoken = lower
+    .replace(/tion\b/g, "şın")
+    .replace(/sion\b/g, "jın")
+    .replace(/ough/g, "of")
+    .replace(/augh/g, "af")
+    .replace(/ph/g, "f")
+    .replace(/sh/g, "ş")
+    .replace(/ch/g, "ç")
+    .replace(/th/g, "d")
+    .replace(/ck/g, "k")
+    .replace(/qu/g, "kv")
+    .replace(/x/g, "ks")
+    .replace(/oo/g, "u")
+    .replace(/ee/g, "i")
+    .replace(/ea/g, "i")
+    .replace(/ai/g, "ey")
+    .replace(/ay/g, "ey")
+    .replace(/oa/g, "ou")
+    .replace(/ow/g, "au")
+    .replace(/ou/g, "au")
+    .replace(/ie/g, "ay")
+    .replace(/igh/g, "ay")
+    .replace(/er\b/g, "ır")
+    .replace(/or\b/g, "ır")
+    .replace(/ing\b/g, "ing")
+    .replace(/ed\b/g, "d")
+    .replace(/c([eiy])/g, "s$1")
+    .replace(/c/g, "k")
+    .replace(/j/g, "c")
+    .replace(/w/g, "v")
+    .replace(/y\b/g, "i")
+    .replace(/y/g, "y")
+    .replace(/a/g, "e")
+    .replace(/i/g, "i")
+    .replace(/u/g, "u");
+
+  return `${spoken}${suffix}`;
+}
+
+const englishPhoneticDictionary = {
+  a: "e",
+  about: "ıbaut",
+  active: "ektiv",
+  advice: "edvays",
+  age: "eyc",
+  ai: "ey ay",
+  all: "ol",
+  am: "em",
+  an: "en",
+  and: "end",
+  answer: "ensır",
+  answering: "ensıring",
+  api: "ey pi ay",
+  are: "ar",
+  as: "ez",
+  ask: "esk",
+  assistant: "asistant",
+  available: "aveylıbıl",
+  bad: "bed",
+  be: "bi",
+  because: "bikoz",
+  bot: "bot",
+  browser: "brauzır",
+  build: "bild",
+  built: "bilt",
+  but: "bat",
+  by: "bay",
+  can: "ken",
+  cannot: "ken nat",
+  caught: "kot",
+  chat: "çet",
+  check: "çek",
+  choose: "çuz",
+  clear: "klir",
+  coded: "kodıd",
+  color: "kalır",
+  commands: "komends",
+  continue: "kontinyu",
+  core: "kor",
+  css: "si es es",
+  date: "deyt",
+  design: "dizayn",
+  did: "did",
+  digital: "dijitıl",
+  do: "du",
+  does: "daz",
+  english: "ingliş",
+  enough: "inaf",
+  feel: "fiıl",
+  features: "fiçırs",
+  free: "fri",
+  freshly: "freşli",
+  full: "ful",
+  get: "get",
+  github: "githab",
+  give: "giv",
+  got: "gat",
+  greetings: "gritings",
+  has: "hez",
+  have: "hev",
+  hear: "hir",
+  hello: "helo",
+  help: "help",
+  here: "hir",
+  hi: "hay",
+  how: "hau",
+  html: "eyç ti em el",
+  i: "ay",
+  if: "if",
+  in: "in",
+  interface: "intırfeys",
+  is: "iz",
+  it: "it",
+  joke: "couk",
+  language: "lengvic",
+  let: "let",
+  like: "layk",
+  limited: "limitıd",
+  listen: "lisın",
+  local: "lokal",
+  me: "mi",
+  microphone: "maykrofon",
+  mode: "moud",
+  model: "model",
+  my: "may",
+  name: "neym",
+  needs: "nidz",
+  not: "nat",
+  now: "nau",
+  of: "ov",
+  on: "on",
+  one: "van",
+  openai: "open ey ay",
+  openrouter: "open rautır",
+  or: "or",
+  orb: "orb",
+  page: "peyc",
+  pages: "peyciz",
+  passed: "past",
+  question: "kuestçın",
+  questions: "kuestçınz",
+  ready: "redi",
+  reply: "riplay",
+  robo: "robo",
+  run: "ran",
+  running: "raning",
+  safe: "seyf",
+  say: "sey",
+  see: "si",
+  sentence: "sentıns",
+  short: "şort",
+  site: "sayt",
+  slow: "slou",
+  small: "smol",
+  so: "sou",
+  speech: "spiç",
+  subtitle: "sab taytıl",
+  subtitles: "sab taytılz",
+  suggest: "sacest",
+  sure: "şur",
+  system: "sistım",
+  talk: "tok",
+  text: "tekst",
+  that: "det",
+  the: "dı",
+  this: "dis",
+  time: "taym",
+  to: "tu",
+  today: "tudey",
+  together: "tugethır",
+  try: "tray",
+  turkish: "törkiş",
+  turns: "törnz",
+  ui: "yu ay",
+  understand: "andırstend",
+  up: "ap",
+  use: "yuz",
+  used: "yuzd",
+  user: "yuzır",
+  voice: "voys",
+  want: "vant",
+  weather: "vedır",
+  welcome: "velkam",
+  what: "vat",
+  when: "ven",
+  who: "hu",
+  why: "vay",
+  with: "vid",
+  without: "vidaut",
+  works: "vörks",
+  would: "vud",
+  write: "rayt",
+  you: "yu",
+  your: "yor"
+};
+
+function spellAcronymForTurkish(word) {
+  const names = {
+    A: "a",
+    B: "be",
+    C: "se",
+    D: "de",
+    E: "e",
+    F: "ef",
+    G: "ge",
+    H: "ha",
+    I: "ay",
+    J: "cey",
+    K: "ka",
+    L: "el",
+    M: "em",
+    N: "en",
+    O: "o",
+    P: "pe",
+    Q: "kü",
+    R: "ar",
+    S: "es",
+    T: "te",
+    U: "yu",
+    V: "vi",
+    W: "dabılyu",
+    X: "iks",
+    Y: "vay",
+    Z: "zed"
+  };
+
+  return word
+    .split("")
+    .map(letter => names[letter.toUpperCase()] || letter)
+    .join(" ");
 }
 
 async function startAudioLevel() {
@@ -559,68 +870,218 @@ function clientDemoReply(message) {
 }
 
 function localBrainReply(message, lang) {
-  const text = message.toLocaleLowerCase(lang === "tr" ? "tr-TR" : "en-US");
+  const text = normalizeForIntent(message);
   const now = new Date();
+  const mathAnswer = solveSimpleMath(text, lang);
 
-  if (matchesAny(text, ["merhaba", "selam", "slm", "hello", "hi", "hey"])) {
-    return lang === "tr"
-      ? "Merhaba. Ben Robo AI. API olmadan kendi yerel çekirdeğimle çalışıyorum; kısa sorulara, komutlara ve sohbetlere cevap verebilirim."
-      : "Hello. I am Robo AI. Without an API, I run on my local core and can answer short questions, commands, and simple chats.";
+  if (mathAnswer) {
+    return mathAnswer;
   }
 
-  if (matchesAny(text, ["saat", "saat kaç?", "time"])) {
+  if (hasAny(text, ["merhaba", "selam", "slm", "sa", "hello", "hi", "hey", "good morning", "good evening"])) {
+    return lang === "tr"
+      ? "Merhaba. Ben Robo AI. Yerel çekirdeğim açık; sorunu cümle halinde yaz, anlamaya çalışayım."
+      : "Hello. I am Robo AI. My local core is active; write your question as a sentence and I will try to understand it.";
+  }
+
+  if (hasAny(text, ["tesekkur", "sag ol", "eyvallah", "thanks", "thank you"])) {
+    return lang === "tr"
+      ? "Rica ederim. Buradayım, devam edebiliriz."
+      : "You are welcome. I am here, we can continue.";
+  }
+
+  if (hasAny(text, ["gorusuruz", "bye", "goodbye", "cikis", "kapat"])) {
+    return lang === "tr"
+      ? "Görüşürüz. Tekrar konuşmak istersen mikrofon veya mesaj kutusu hazır."
+      : "Goodbye. If you want to talk again, the microphone and text box are ready.";
+  }
+
+  if (hasAny(text, ["saat", "kac oldu", "time", "what time"])) {
     return lang === "tr"
       ? `Şu an saat ${now.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}.`
       : `It is ${now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}.`;
   }
 
-  if (matchesAny(text, ["tarih", "Bugünün tarihi ne?", "date", "today"])) {
+  if (hasAny(text, ["tarih", "bugun", "hangi gun", "date", "today", "day is it"])) {
     return lang === "tr"
       ? `Bugünün tarihi ${now.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}.`
       : `Today is ${now.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}.`;
   }
 
-  if (matchesAny(text, ["adın", "kimsin", "who are you", "your name"])) {
+  if (hasAny(text, ["adin", "ismin", "kimsin", "nesin", "who are you", "your name", "what are you"])) {
     return lang === "tr"
-      ? "Ben Robo AI. Sesini yazıya çeviren, ekranda altyazı gösteren ve cevaplarını sesli okuyabilen yerel bir asistanım."
+      ? "Ben Robo AI. Sesini yazıya çeviren, altyazı gösteren, cevaplarını sesli okuyan ve API olmadan temel soruları yerel cevaplayan bir asistanım."
       : "I am Robo AI, a local assistant that turns speech into text, shows subtitles, and reads replies aloud.";
   }
 
-  if (matchesAny(text, ["ne yapabilirsin", "özellik", "yetenek", "what can you do", "features"])) {
-    return lang === "tr"
-      ? "Mikrofonu dinleyebilirim, konuşmanı altyazıya çevirebilirim, Türkçe ve İngilizce cevap verebilirim, basit soruları yerel olarak yanıtlayabilirim ve konuşurken orb animasyonunu hareket ettirebilirim."
-      : "I can listen through the microphone, turn speech into subtitles, answer in Turkish or English, handle simple questions locally, and animate the orb while speaking.";
-  }
-
-  if (matchesAny(text, ["github", "pages", "site", "yayınla", "deploy"])) {
-    return lang === "tr"
-      ? "GitHub Pages için public klasörü yayınlanır. Bu sürüm API olmadan da çalışır; gerçek büyük model istersen bir API veya sunucuda çalışan model gerekir."
-      : "For GitHub Pages, the public folder is published. This version works without an API, but a larger real model needs an API or a hosted model.";
-  }
-
-  if (matchesAny(text, ["api", "openrouter", "openai", "key"])) {
-    return lang === "tr"
-      ? "API kullanmadan çalışabilirim, ama bu yerel çekirdek sınırlıdır. Büyük dil modeli gibi yaratıcı ve derin cevaplar için bir modelin bir yerde çalışması gerekir."
-      : "I can work without an API, but this local core is limited. For creative and deep answers like a large language model, a model must run somewhere.";
-  }
-
-  if (matchesAny(text, ["Seni kodlayan kim?", "Who coded you?", "Yaratıcı", "Creator"])) {
+  if (hasAny(text, ["seni kim", "kim yapti", "kim kodladi", "kodlayan", "yaratici", "creator", "who made", "who coded"])) {
     return lang === "tr"
       ? "Ben ItzPertoTe tarafından kodlandım."
       : "I was coded by ItzPertoTe.";
   }
 
-  if (text.endsWith("?") || matchesAny(text, ["neden", "nasıl", "what", "why", "how"])) {
+  if (hasAny(text, ["ne yapabilirsin", "ozellik", "yetenek", "komut", "yardim", "help", "features", "what can you do", "commands"])) {
     return lang === "tr"
-      ? "Bunu yerel çekirdeğimle kesin cevaplayamam. Kısa bir komut, saat, tarih, kendimi tanıtma veya proje hakkında bir şey sorarsan cevaplayabilirim."
-      : "I cannot answer that confidently with my local core. Ask a short command, time, date, identity, or project question and I can help.";
+      ? "Şunları anlayabilirim: selamlaşma, saat, tarih, kim olduğum, beni kimin kodladığı, özelliklerim, GitHub Pages, mikrofon sorunları, dil değiştirme, basit matematik, kısa öneri, şaka, moral desteği ve API/yerel çalışma farkı."
+      : "I can understand greetings, time, date, who I am, who coded me, my features, GitHub Pages, microphone issues, language switching, simple math, short advice, jokes, encouragement, and the difference between local and API mode.";
+  }
+
+  if (hasAny(text, ["turkce konus", "tr ye gec", "ingilizce konus", "en ye gec", "change language", "speak english", "speak turkish"])) {
+    return lang === "tr"
+      ? "Dili üstteki TR ve EN düğmelerinden değiştirebilirsin. Değiştirince mikrofon dili ve okuma sesi de ona göre ayarlanır."
+      : "Use the TR and EN buttons at the top to change language. The microphone language and voice output follow that setting.";
+  }
+
+  if (hasAny(text, ["ses", "okuma", "erkek", "kadin", "voice", "read aloud", "male", "female"])) {
+    return lang === "tr"
+      ? "Ses tarayıcının yüklü seslerine bağlıdır. EN seçiliyken İngilizce ses bulursam onu kullanırım; yoksa tarayıcı varsayılan sese düşebilir."
+      : "The voice depends on the voices installed in your browser. In EN mode I pick an English voice when available; otherwise the browser may fall back to its default voice.";
+  }
+
+  if (hasAny(text, ["mikrofon", "duymuyor", "sesimi almiyor", "permission", "microphone", "mic not working"])) {
+    return lang === "tr"
+      ? "Mikrofon çalışmıyorsa tarayıcı izinlerini kontrol et, sayfayı yenile ve HTTPS üzerinden açtığından emin ol. GitHub Pages zaten HTTPS kullanır."
+      : "If the microphone is not working, check browser permissions, refresh the page, and make sure the site is opened over HTTPS. GitHub Pages already uses HTTPS.";
+  }
+
+  if (hasAny(text, ["github", "pages", "site", "yayinla", "deploy", "css yuklenmedi", "js yuklenmedi"])) {
+    return lang === "tr"
+      ? "GitHub Pages için public klasörü yayınlanır. CSS veya JS yüklenmezse genelde dosya yolu ya da tarayıcı cache sorunudur; index.html dosyasındaki sürüm etiketi bunu yenilemek için var."
+      : "For GitHub Pages, the public folder is published. If CSS or JS does not load, it is usually a path or cache issue; the version tag in index.html helps refresh it.";
+  }
+
+  if (hasAny(text, ["api", "openrouter", "openai", "key", "quota", "billing"])) {
+    return lang === "tr"
+      ? "Şu an yerel moddayım, API kullanmıyorum. API bağlanırsa daha geniş cevaplar verebilirim; yerel mod ise hızlı, ücretsiz ve sınırlıdır."
+      : "I am in local mode right now and I am not using an API. With an API I can give broader answers; local mode is fast, free, and limited.";
+  }
+
+  if (hasAny(text, ["hava", "weather", "rain", "yagmur"])) {
+    return lang === "tr"
+      ? "Canlı hava durumunu API olmadan bilemem. Ama şehir adını ve gözlemini yazarsan kıyafet veya plan önerisi yapabilirim."
+      : "I cannot know live weather without an API. But if you tell me the city and what you see outside, I can suggest clothing or plans.";
+  }
+
+  if (hasAny(text, ["saka", "komik", "joke", "funny"])) {
+    return lang === "tr"
+      ? "Küçük bir yazılımcı şakası: Kod çalışıyorsa dokunma; çalışmıyorsa önce noktalı virgüle bak."
+      : "A tiny developer joke: if it works, do not touch it; if it does not, check the semicolon first.";
+  }
+
+  if (hasAny(text, ["moralim bozuk", "uzuldum", "kotu hissediyorum", "canim sikildi", "sad", "upset", "feel bad"])) {
+    return lang === "tr"
+      ? "Üzgün hissetmen normal. Biraz yavaşlayalım: derin bir nefes al, tek bir küçük şeyi seç, onu beraber sadeleştirelim."
+      : "It is okay to feel bad. Let us slow down: take a breath, choose one small thing, and we can simplify it together.";
+  }
+
+  if (hasAny(text, ["oner", "ne yapayim", "fikir ver", "advice", "suggest", "idea"])) {
+    return lang === "tr"
+      ? "Kısa önerim: önce hedefi tek cümle yap, sonra en küçük çalışan parçayı kur. Robo AI için bu parça: arayüz, mikrofon, yerel cevap ve sesli okuma."
+      : "My short advice: make the goal one sentence, then build the smallest working piece. For Robo AI that piece is UI, microphone, local reply, and voice output.";
+  }
+
+  if (hasAny(text, ["renk", "tasarim", "orb", "color", "design"])) {
+    return lang === "tr"
+      ? "Tasarımda koyu arka plan, turkuaz enerji rengi ve konuşmaya tepki veren orb kullanıyorum. Bu yüzden arayüz daha futuristik görünüyor."
+      : "The design uses a dark background, cyan energy color, and a voice-reactive orb, which gives the interface a futuristic feel.";
+  }
+
+  if (hasAny(text, ["guvenli mi", "gizlilik", "privacy", "safe", "secure"])) {
+    return lang === "tr"
+      ? "Yerel modda yazdığın metin dış API’ye gönderilmez. Mikrofon metne tarayıcı tarafından çevrilir; tarayıcının kendi ses tanıma sistemi yine izin gerektirir."
+      : "In local mode, your typed text is not sent to an external API. Speech recognition is handled by the browser and still requires microphone permission.";
+  }
+
+  if (hasAny(text, ["kac yasindasin", "yas", "how old", "age"])) {
+    return lang === "tr"
+      ? "Bir yaşım yok; bu projede çalışan dijital bir asistanım. Ama bugün kendimi yeni derlenmiş gibi hissediyorum."
+      : "I do not have an age; I am a digital assistant running in this project. But today I feel freshly built.";
+  }
+
+  if (hasAny(text, ["beni duyuyor musun", "duydun mu", "can you hear me", "did you hear"])) {
+    return lang === "tr"
+      ? "Evet, mesajını aldım. Mikrofonla konuştuysan altyazı kısmında yakaladığım metni de görebilirsin."
+      : "Yes, I got your message. If you used the microphone, you can also see the captured text in the subtitle area.";
+  }
+
+  if (hasAny(text, ["test", "deneme", "calisiyor mu", "working"])) {
+    return lang === "tr"
+      ? "Test başarılı. Yerel çekirdek cevap üretiyor, arayüz aktif ve sesli okuma hazır."
+      : "Test passed. The local core is replying, the interface is active, and voice output is ready.";
+  }
+
+  if (hasAny(text, ["ozetle", "summary", "summarize"])) {
+    return lang === "tr"
+      ? "Kısa özet: Robo AI şu an ana sitede API olmadan yerel çalışıyor; ses, altyazı, iki dil ve temel cümle anlama var."
+      : "Short summary: Robo AI now runs locally on the main site without an API; it has voice, subtitles, two languages, and basic sentence understanding.";
+  }
+
+  if (isQuestion(text)) {
+    return lang === "tr"
+      ? "Bunu tam bir büyük model gibi çözemem, ama cümlendeki niyeti yakaladım. Daha net yazarsan yerel çekirdeğimle kısa ve doğrudan cevap vermeye çalışırım."
+      : "I cannot solve that like a full large model, but I caught the intent. If you write it more clearly, my local core will try to answer directly.";
   }
 
   return lang === "tr"
-    ? `Seni duydum: "${message}". Şu an kendi yerel zekamla çalışıyorum; daha basit veya net bir soru sorarsan cevaplamaya çalışırım.`
-    : `I heard: "${message}". I am running on my local intelligence right now; ask a simpler or clearer question and I will try to answer.`;
+    ? `Seni duydum: "${message}". Yerel çekirdeğim bunu genel sohbet olarak algıladı. İstersen soru, komut, hesap, site, mikrofon, dil veya tasarım hakkında yaz.`
+    : `I heard: "${message}". My local core treated this as general chat. You can ask about questions, commands, math, the site, microphone, language, or design.`;
 }
 
-function matchesAny(text, patterns) {
-  return patterns.some(pattern => text.includes(pattern));
+function normalizeForIntent(value) {
+  return String(value || "")
+    .toLocaleLowerCase("tr-TR")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ı/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .replace(/[^\p{L}\p{N}+\-*/=,.? ]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function hasAny(text, patterns) {
+  return patterns.some(pattern => text.includes(normalizeForIntent(pattern)));
+}
+
+function isQuestion(text) {
+  return text.endsWith("?")
+    || hasAny(text, ["ne", "neden", "nasil", "nereye", "nerede", "kim", "kac", "hangi", "what", "why", "how", "where", "who", "when", "which"]);
+}
+
+function solveSimpleMath(text, lang) {
+  const expressionMatch = text.match(/(-?\d+(?:[.,]\d+)?)\s*([+\-*/])\s*(-?\d+(?:[.,]\d+)?)/);
+  if (!expressionMatch) {
+    return "";
+  }
+
+  const left = Number(expressionMatch[1].replace(/,/g, "."));
+  const operator = expressionMatch[2];
+  const right = Number(expressionMatch[3].replace(/,/g, "."));
+
+  if (!Number.isFinite(left) || !Number.isFinite(right)) {
+    return "";
+  }
+
+  if (operator === "/" && right === 0) {
+    return lang === "tr"
+      ? "Sıfıra bölme yapamam; matematik buna izin vermez."
+      : "I cannot divide by zero; math does not allow it.";
+  }
+
+  const result = {
+    "+": left + right,
+    "-": left - right,
+    "*": left * right,
+    "/": left / right
+  }[operator];
+
+  const formatted = Number.isInteger(result) ? String(result) : result.toFixed(4).replace(/0+$/, "").replace(/\.$/, "");
+  const expression = `${left} ${operator} ${right}`;
+  return lang === "tr"
+    ? `${expression.replace("*", " çarpı ").replace("/", " bölü ")} sonucu ${formatted}.`
+    : `${expression} equals ${formatted}.`;
 }
