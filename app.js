@@ -347,10 +347,18 @@ function setupDOM() {
     micBtn.addEventListener("click", toggleMic);
   }
   if (compForm) {
-    compForm.addEventListener("submit", handleComposerSubmit);
+    compForm.addEventListener("submit", e => {
+      e.preventDefault();
+      submitText(elements.textInput.value);
+    });
   }
   if (txtInput) {
-    txtInput.addEventListener("keydown", handleInputKeyDown);
+    txtInput.addEventListener("keydown", e => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        submitText(elements.textInput.value);
+      }
+    });
   }
   if (clearBtn) {
     clearBtn.addEventListener("click", clearConversation);
