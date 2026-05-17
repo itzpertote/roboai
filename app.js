@@ -433,7 +433,7 @@ function scoreVoice(voice, target, base) {
 
 function prepareSpeechText(text, lang) {
   if (lang === "en") {
-    return phoneticizeEnglishSentence(text);
+    return text;
   }
 
   let spoken = ` ${text} `;
