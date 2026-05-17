@@ -1313,6 +1313,10 @@ const definitionKnowledge = {
     tr: "Domates, genelde sebze gibi kullanılan ama botanik olarak meyve sayılan kırmızı, sulu bir bitki ürünüdür. Salatada, yemekte, sosta ve salçada çok kullanılır.",
     en: "A tomato is a red, juicy plant fruit that is commonly used like a vegetable. It is used in salads, meals, sauces, and paste."
   },
+  tomato: {
+    tr: "Domates, genelde sebze gibi kullanılan ama botanik olarak meyve sayılan kırmızı, sulu bir bitki ürünüdür. Salatada, yemekte, sosta ve salçada çok kullanılır.",
+    en: "A tomato is a red, juicy plant fruit that is commonly used like a vegetable. It is used in salads, meals, sauces, and paste."
+  },
   api: {
     tr: "API, iki yazılımın birbiriyle konuşmasını sağlayan arayüzdür. Bir site API sayesinde başka bir servisten veri veya cevap alabilir.",
     en: "An API is an interface that lets two software systems talk to each other. A site can use an API to get data or responses from another service."
@@ -1325,8 +1329,8 @@ const definitionKnowledge = {
     tr: "Robo AI, bu projede çalışan sesli web asistanıdır. Konuşmayı yazıya çevirir, yerel cevap üretir ve cevabı sesli okur.",
     en: "Robo AI is the voice web assistant in this project. It converts speech to text, creates local replies, and reads them aloud."
   },
-  yapayzeka: {
-    tr: "Yapay zeka, bilgisayarların öğrenme, anlama, karar verme veya içerik üretme gibi insan benzeri görevleri yapmasını sağlayan teknolojilerin genel adıdır.",
+  AI: {
+    tr: "AI, bilgisayarların öğrenme, anlama, karar verme veya içerik üretme gibi insan benzeri görevleri yapmasını sağlayan teknolojilerin genel adıdır.",
     en: "Artificial intelligence is the general name for technologies that let computers perform human-like tasks such as learning, understanding, deciding, or generating content."
   },
   "yapay zeka": {
@@ -1341,7 +1345,15 @@ const definitionKnowledge = {
     tr: "Tarayıcı, web sitelerini açmak için kullanılan uygulamadır. Chrome, Edge, Firefox ve Safari buna örnektir.",
     en: "A browser is an app used to open websites. Chrome, Edge, Firefox, and Safari are examples."
   },
+  browser: {
+    tr: "Browser, web sitelerini açmak için kullanılan uygulamadır. Chrome, Edge, Firefox ve Safari buna örnektir.",
+    en: "A browser is an app used to open websites. Chrome, Edge, Firefox, and Safari are examples."
+  },
   mikrofon: {
+    tr: "Mikrofon, sesi elektriksel veya dijital sinyale çeviren giriş cihazıdır. Robo AI bunu konuşmanı yazıya çevirmek için kullanır.",
+    en: "A microphone is an input device that turns sound into an electrical or digital signal. Robo AI uses it to convert speech to text."
+  },
+  microphone: {
     tr: "Mikrofon, sesi elektriksel veya dijital sinyale çeviren giriş cihazıdır. Robo AI bunu konuşmanı yazıya çevirmek için kullanır.",
     en: "A microphone is an input device that turns sound into an electrical or digital signal. Robo AI uses it to convert speech to text."
   },
@@ -1355,7 +1367,15 @@ const definitionKnowledge = {
     tr: "Bilgisayar, verileri alan, işleyen, saklayan ve sonuç üreten elektronik bir cihazdır. Günümüzde iş, eğlence ve iletişim için vazgeçilmezdir.",
     en: "A computer is an electronic device that receives, processes, stores, and produces data results. Today, it is indispensable for work, entertainment, and communication."
   },
+  computer: {
+    tr: "Bilgisayar, verileri alan, işleyen, saklayan ve sonuç üreten elektronik bir cihazdır. Günümüzde iş, eğlence ve iletişim için vazgeçilmezdir.",
+    en: "A computer is an electronic device that receives, processes, stores, and produces data results. Today, it is indispensable for work, entertainment, and communication."
+  },
   "yazilim": {
+    tr: "Yazılım, bilgisayarın veya akıllı cihazların ne yapacağını söyleyen kodlar, programlar ve komutlar bütünüdür.",
+    en: "Software is the collection of codes, programs, and instructions that tell a computer or smart device what to do."
+  },
+  software: {
     tr: "Yazılım, bilgisayarın veya akıllı cihazların ne yapacağını söyleyen kodlar, programlar ve komutlar bütünüdür.",
     en: "Software is the collection of codes, programs, and instructions that tell a computer or smart device what to do."
   },
@@ -1363,7 +1383,11 @@ const definitionKnowledge = {
     tr: "Web sitesi, internet üzerinde belirli bir alan adı altında toplanmış, birbiriyle bağlantılı web sayfalarının bütünüdür.",
     en: "A website is a collection of interconnected web pages grouped under a specific domain name on the internet."
   },
-  veritabani: {
+  websitesi: {
+    tr: "Web sitesi, internet üzerinde belirli bir alan adı altında toplanmış, birbiriyle bağlantılı web sayfalarının bütünüdür.",
+    en: "A website is a collection of interconnected web pages grouped under a specific domain name on the internet."
+  },
+  "veritabani": {
     tr: "Veritabanı, bilgilerin düzenli ve hızlı erişilebilir bir şekilde dijital ortamda saklandığı sistemdir.",
     en: "A database is a system where information is stored digitally in an organized and quickly accessible manner."
   },
@@ -1375,7 +1399,15 @@ const definitionKnowledge = {
     tr: "Bulut, verilerin kendi bilgisayarında değil, internet üzerindeki güçlü sunucularda saklanması ve işlenmesi teknolojisidir.",
     en: "Cloud is the technology where data is stored and processed on powerful servers over the internet instead of your own computer."
   },
+  cloud: {
+    tr: "Bulut, verilerin kendi bilgisayarında değil, internet üzerindeki güçlü sunucularda saklanması ve işlenmesi teknolojisidir.",
+    en: "Cloud is the technology where data is stored and processed on powerful servers over the internet instead of your own computer."
+  },
   sunucu: {
+    tr: "Sunucu, internet üzerindeki web sitelerini veya verileri saklayan ve diğer bilgisayarların erişimine sunan güçlü bilgisayardır.",
+    en: "A server is a powerful computer that stores websites or data on the internet and makes them accessible to other computers."
+  },
+  server: {
     tr: "Sunucu, internet üzerindeki web sitelerini veya verileri saklayan ve diğer bilgisayarların erişimine sunan güçlü bilgisayardır.",
     en: "A server is a powerful computer that stores websites or data on the internet and makes them accessible to other computers."
   },
@@ -1383,7 +1415,15 @@ const definitionKnowledge = {
     tr: "Şifre, hesapların ve kişisel verilerin güvenliğini sağlamak için kullanılan gizli kelime veya karakter dizisidir.",
     en: "A password is a secret word or character string used to ensure the security of accounts and personal data."
   },
+  password: {
+    tr: "Şifre, hesapların ve kişisel verilerin güvenliğini sağlamak için kullanılan gizli kelime veya karakter dizisidir.",
+    en: "A password is a secret word or character string used to ensure the security of accounts and personal data."
+  },
   "akilli telefon": {
+    tr: "Akıllı telefon, sadece arama yapmakla kalmayıp internete bağlanan, uygulamalar çalıştıran ve bilgisayar gibi işlev gören cep telefonudur.",
+    en: "A smartphone is a mobile phone that not only makes calls but also connects to the internet, runs apps, and functions like a computer."
+  },
+  "smartphone": {
     tr: "Akıllı telefon, sadece arama yapmakla kalmayıp internete bağlanan, uygulamalar çalıştıran ve bilgisayar gibi işlev gören cep telefonudur.",
     en: "A smartphone is a mobile phone that not only makes calls but also connects to the internet, runs apps, and functions like a computer."
   },
@@ -1391,7 +1431,15 @@ const definitionKnowledge = {
     tr: "Uygulama, telefon veya bilgisayarlarda belirli bir işi yapmak (oyun oynamak, sohbet etmek vb.) için yüklenen programlardır.",
     en: "An application (app) is a program installed on phones or computers to perform a specific task (playing games, chatting, etc.)."
   },
+  app: {
+    tr: "Uygulama, telefon veya bilgisayarlarda belirli bir işi yapmak (oyun oynamak, sohbet etmek vb.) için yüklenen programlardır.",
+    en: "An application (app) is a program installed on phones or computers to perform a specific task (playing games, chatting, etc.)."
+  },
   kodlama: {
+    tr: "Kodlama, bilgisayara belirli görevleri yerine getirmesi için yazılı talimatlar verme sürecidir.",
+    en: "Coding is the process of giving written instructions to a computer to perform specific tasks."
+  },
+  coding: {
     tr: "Kodlama, bilgisayara belirli görevleri yerine getirmesi için yazılı talimatlar verme sürecidir.",
     en: "Coding is the process of giving written instructions to a computer to perform specific tasks."
   },
@@ -1399,7 +1447,15 @@ const definitionKnowledge = {
     tr: "Sosyal medya, insanların internet üzerinden içerik paylaştığı, iletişim kurduğu ve etkileşime girdiği platformların genel adıdır.",
     en: "Social media is the general name for platforms where people share content, communicate, and interact over the internet."
   },
+  social media: {
+    tr: "Sosyal medya, insanların internet üzerinden içerik paylaştığı, iletişim kurduğu ve etkileşime girdiği platformların genel adıdır.",
+    en: "Social media is the general name for platforms where people share content, communicate, and interact over the internet."
+  },
   ekran: {
+    tr: "Ekran, bilgisayar, telephone veya televizyondaki görüntüleri ve bilgileri gözle görmemizi sağlayan paneldir.",
+    en: "A screen is the panel that allows us to visually see images and information on a computer, phone, or television."
+  },
+  screen: {
     tr: "Ekran, bilgisayar, telephone veya televizyondaki görüntüleri ve bilgileri gözle görmemizi sağlayan paneldir.",
     en: "A screen is the panel that allows us to visually see images and information on a computer, phone, or television."
   },
@@ -1407,7 +1463,15 @@ const definitionKnowledge = {
     tr: "Klavye, üzerinde harf ve sayılar bulunan, bilgisayara yazı yazmayı ve komut vermeyi sağlayan giriş cihazıdır.",
     en: "A keyboard is an input device with letters and numbers that allows typing and giving commands to a computer."
   },
+  keyboard: {
+    tr: "Klavye, üzerinde harf ve sayılar bulunan, bilgisayara yazı yazmayı ve komut vermeyi sağlayan giriş cihazıdır.",
+    en: "A keyboard is an input device with letters and numbers that allows typing and giving commands to a computer."
+  },
   fare: {
+    tr: "Fare, bilgisayar ekranındaki imleci hareket ettirmeye ve tıklayarak seçim yapmaya yarayan cihazdır.",
+    en: "A mouse is a device used to move the cursor on the computer screen and make selections by clicking."
+  },
+  mouse: {
     tr: "Fare, bilgisayar ekranındaki imleci hareket ettirmeye ve tıklayarak seçim yapmaya yarayan cihazdır.",
     en: "A mouse is a device used to move the cursor on the computer screen and make selections by clicking."
   },
@@ -1416,6 +1480,10 @@ const definitionKnowledge = {
     en: "A search engine is a system, like Google, that allows us to find information, sites, or images on the internet using keywords."
   },
   "e-posta": {
+    tr: "E-posta, internet üzerinden dijital olarak mektup, dosya veya mesaj gönderme ve alma yöntemidir.",
+    en: "E-mail is a method of sending and receiving letters, files, or messages digitally over the internet."
+  },
+  "e-mail": {
     tr: "E-posta, internet üzerinden dijital olarak mektup, dosya veya mesaj gönderme ve alma yöntemidir.",
     en: "E-mail is a method of sending and receiving letters, files, or messages digitally over the internet."
   },
@@ -1439,7 +1507,15 @@ const definitionKnowledge = {
     tr: "İndir, internetteki bir dosyayı, resmi veya programı kendi bilgisayarına veya telefonuna kaydetme işlemidir.",
     en: "Download is the process of saving a file, image, or program from the internet onto your own computer or phone."
   },
+  download: {
+    tr: "İndir, internetteki bir dosyayı, resmi veya programı kendi bilgisayarına veya telefonuna kaydetme işlemidir.",
+    en: "Download is the process of saving a file, image, or program from the internet onto your own computer or phone."
+  },
   "yukle": {
+    tr: "Yükle, kendi cihazındaki bir dosyayı internete göndermek (upload) veya bir programı cihaza kurmak (install) anlamına gelir.",
+    en: "Upload/Install means sending a file from your device to the internet (upload) or setting up a program on your device (install)."
+  },
+  install: {
     tr: "Yükle, kendi cihazındaki bir dosyayı internete göndermek (upload) veya bir programı cihaza kurmak (install) anlamına gelir.",
     en: "Upload/Install means sending a file from your device to the internet (upload) or setting up a program on your device (install)."
   },
@@ -1465,7 +1541,15 @@ const definitionKnowledge = {
     tr: "Kahve, kavrulmuş kahve çekirdeklerinden yapılan, dünyada çok popüler olan kafeinli ve enerji verici bir sıcak içecektir.",
     en: "Coffee is a popular caffeinated and energizing hot drink made from roasted coffee beans."
   },
+  cofee: {
+    tr: "Kahve, kavrulmuş kahve çekirdeklerinden yapılan, dünyada çok popüler olan kafeinli ve enerji verici bir sıcak içecektir.",
+    en: "Coffee is a popular caffeinated and energizing hot drink made from roasted coffee beans."
+  },
   "cay": {
+    tr: "Çay, çay bitkisinin yapraklarının demlenmesiyle yapılan, Türk kültüründe sabah kahvaltısından akşam sohbetlerine kadar çok önemli bir yeri olan sıcak içecektir.",
+    en: "Tea is a hot beverage made by brewing tea plant leaves, holding a very important place in Turkish culture from breakfast to evening chats."
+  },
+  tea: {
     tr: "Çay, çay bitkisinin yapraklarının demlenmesiyle yapılan, Türk kültüründe sabah kahvaltısından akşam sohbetlerine kadar çok önemli bir yeri olan sıcak içecektir.",
     en: "Tea is a hot beverage made by brewing tea plant leaves, holding a very important place in Turkish culture from breakfast to evening chats."
   },
@@ -1473,7 +1557,15 @@ const definitionKnowledge = {
     tr: "Araba, insanları veya yükleri taşımak için kullanılan, genellikle dört tekerlekli ve motorlu kara ulaşım aracıdır.",
     en: "A car is a motor vehicle, usually with four wheels, used on roads to transport people or cargo."
   },
+  car: {
+    tr: "Araba, insanları veya yükleri taşımak için kullanılan, genellikle dört tekerlekli ve motorlu kara ulaşım aracıdır.",
+    en: "A car is a motor vehicle, usually with four wheels, used on roads to transport people or cargo."
+  },
   kitap: {
+    tr: "Kitap, bir konuyu açıklayan veya bir hikaye anlatan, basılı ya da dijital sayfaların bir araya gelmesiyle oluşan eserdir.",
+    en: "A book is a work formed by printed or digital pages bound together, explaining a subject or telling a story."
+  },
+  book: {
     tr: "Kitap, bir konuyu açıklayan veya bir hikaye anlatan, basılı ya da dijital sayfaların bir araya gelmesiyle oluşan eserdir.",
     en: "A book is a work formed by printed or digital pages bound together, explaining a subject or telling a story."
   },
@@ -1481,7 +1573,15 @@ const definitionKnowledge = {
     tr: "Ev, insanların içinde yaşadığı, barındığı, güvende hissettiği ve dinlendiği bina veya yaşam alanıdır.",
     en: "A house or home is a building or living space where people live, shelter, feel safe, and rest."
   },
+  house: {
+    tr: "Ev, insanların içinde yaşadığı, barındığı, güvende hissettiği ve dinlendiği bina veya yaşam alanıdır.",
+    en: "A house or home is a building or living space where people live, shelter, feel safe, and rest."
+  },
   yemek: {
+    tr: "Yemek, insanların enerji almak ve hayatta kalmak için tükettiği, pişirilmiş veya çiğ besinlerin genel adıdır.",
+    en: "Food or meal is the general name for cooked or raw nutrients that people consume to gain energy and survive."
+  },
+  food: {
     tr: "Yemek, insanların enerji almak ve hayatta kalmak için tükettiği, pişirilmiş veya çiğ besinlerin genel adıdır.",
     en: "Food or meal is the general name for cooked or raw nutrients that people consume to gain energy and survive."
   },
@@ -1489,7 +1589,15 @@ const definitionKnowledge = {
     tr: "Su, tüm canlıların yaşaması için en temel ihtiyaç olan, kokusuz ve tatsız sıvı maddedir.",
     en: "Water is an odorless and tasteless liquid substance, which is the most basic need for all living things to survive."
   },
+  water: {
+    tr: "Su, tüm canlıların yaşaması için en temel ihtiyaç olan, kokusuz ve tatsız sıvı maddedir.",
+    en: "Water is an odorless and tasteless liquid substance, which is the most basic need for all living things to survive."
+  },
   para: {
+    tr: "Para, mal ve hizmet satın almak, borçları ödemek için dünya genelinde kullanılan resmi değişim ve değer ölçme aracıdır.",
+    en: "Money is an official medium of exchange and measure of value used worldwide to buy goods and services and pay debts."
+  },
+  money: {
     tr: "Para, mal ve hizmet satın almak, borçları ödemek için dünya genelinde kullanılan resmi değişim ve değer ölçme aracıdır.",
     en: "Money is an official medium of exchange and measure of value used worldwide to buy goods and services and pay debts."
   },
@@ -1497,7 +1605,15 @@ const definitionKnowledge = {
     tr: "Okul, öğrencilerin eğitim gördüğü, yeni bilgiler öğrendiği ve sosyalleştiği eğitim kurumudur.",
     en: "A school is an educational institution where students receive education, learn new information, and socialize."
   },
+  school: {
+    tr: "Okul, öğrencilerin eğitim gördüğü, yeni bilgiler öğrendiği ve sosyalleştiği eğitim kurumudur.",
+    en: "A school is an educational institution where students receive education, learn new information, and socialize."
+  },
   "is": {
+    tr: "İş, geçimi sağlamak veya bir ürün/hizmet üretmek amacıyla yapılan, emek ve zaman harcanan her türlü aktivitedir.",
+    en: "Work or job is any activity spent with effort and time to earn a living or produce a product/service."
+  },
+  "work": {
     tr: "İş, geçimi sağlamak veya bir ürün/hizmet üretmek amacıyla yapılan, emek ve zaman harcanan her türlü aktivitedir.",
     en: "Work or job is any activity spent with effort and time to earn a living or produce a product/service."
   },
@@ -1505,7 +1621,15 @@ const definitionKnowledge = {
     tr: "Meslek, bir kişinin hayatını kazanmak için yaptığı, genellikle özel bir eğitim veya beceri gerektiren uzmanlık alanıdır.",
     en: "A profession or occupation is a field of expertise that a person does to earn a living, usually requiring special training or skill."
   },
+  occupation: {
+    tr: "Meslek, bir kişinin hayatını kazanmak için yaptığı, genellikle özel bir eğitim veya beceri gerektiren uzmanlık alanıdır.",
+    en: "A profession or occupation is a field of expertise that a person does to earn a living, usually requiring special training or skill."
+  },
   arkadas: {
+    tr: "Arkadaş, sevgi, saygı ve güven bağıyla birbirine bağlı olan, birlikte vakit geçirmekten keyif alınan yakındır.",
+    en: "A friend is a close person bound by love, respect, and trust, with whom spending time together is enjoyed."
+  },
+  friend: {
     tr: "Arkadaş, sevgi, saygı ve güven bağıyla birbirine bağlı olan, birlikte vakit geçirmekten keyif alınan yakındır.",
     en: "A friend is a close person bound by love, respect, and trust, with whom spending time together is enjoyed."
   },
@@ -1513,7 +1637,15 @@ const definitionKnowledge = {
     tr: "Aile, aralarında kan bağı veya evlilik ilişkisi bulunan, genellikle aynı evde yaşayan en küçük toplumsal birimdir.",
     en: "A family is the smallest social unit, connected by blood or marriage, usually living in the same house."
   },
+  family: {
+    tr: "Aile, aralarında kan bağı veya evlilik ilişkisi bulunan, genellikle aynı evde yaşayan en küçük toplumsal birimdir.",
+    en: "A family is the smallest social unit, connected by blood or marriage, usually living in the same house."
+  },
   hava: {
+    tr: "Hava, dünyayı saran ve nefes almamızı sağlayan gaz karışımıdır; günlük hayatta sıcaklık, yağmur gibi hava durumunu ifade etmek için de kullanılır.",
+    en: "Air is the gas mixture surrounding the earth that lets us breathe; in daily life, it also refers to weather conditions like temperature or rain."
+  },
+  air: {
     tr: "Hava, dünyayı saran ve nefes almamızı sağlayan gaz karışımıdır; günlük hayatta sıcaklık, yağmur gibi hava durumunu ifade etmek için de kullanılır.",
     en: "Air is the gas mixture surrounding the earth that lets us breathe; in daily life, it also refers to weather conditions like temperature or rain."
   },
@@ -1521,7 +1653,15 @@ const definitionKnowledge = {
     tr: "Hava durumu, atmosferin belirli bir yerdeki kısa süreli güneşli, yağmurlu, rüzgarlı veya karlı olma halidir.",
     en: "Weather is the short-term state of the atmosphere in a specific place, such as being sunny, rainy, windy, or snowy."
   },
+  "weather": {
+    tr: "Hava durumu, atmosferin belirli bir yerdeki kısa süreli güneşli, yağmurlu, rüzgarlı veya karlı olma halidir.",
+    en: "Weather is the short-term state of the atmosphere in a specific place, such as being sunny, rainy, windy, or snowy."
+  },
   "muzik": {
+    tr: "Müzik, duygu ve düşüncelerin sesler aracılığıyla estetik ve ritmik bir şekilde ifade edilmesi sanatıdır.",
+    en: "Music is the art of expressing emotions and thoughts through sounds in an aesthetic and rhythmic way."
+  },
+  "musik": {
     tr: "Müzik, duygu ve düşüncelerin sesler aracılığıyla estetik ve ritmik bir şekilde ifade edilmesi sanatıdır.",
     en: "Music is the art of expressing emotions and thoughts through sounds in an aesthetic and rhythmic way."
   },
@@ -1529,7 +1669,15 @@ const definitionKnowledge = {
     tr: "Film, bir hikayeyi anlatmak için hareketli görüntüler ve sesler kullanılarak hazırlanan sinema eseridir.",
     en: "A movie or film is a cinematic work made using moving images and sounds to tell a story."
   },
+  movie: {
+    tr: "Film, bir hikayeyi anlatmak için hareketli görüntüler ve sesler kullanılarak hazırlanan sinema eseridir.",
+    en: "A movie or film is a cinematic work made using moving images and sounds to tell a story."
+  },
   spor: {
+    tr: "Spor, fiziksel gelişimi sağlamak, eğlenmek veya yarışmak amacıyla belirli kurallara göre yapılan beden hareketleridir.",
+    en: "Sport refers to physical activities done according to certain rules for physical development, entertainment, or competition."
+  },
+  sport: {
     tr: "Spor, fiziksel gelişimi sağlamak, eğlenmek veya yarışmak amacıyla belirli kurallara göre yapılan beden hareketleridir.",
     en: "Sport refers to physical activities done according to certain rules for physical development, entertainment, or competition."
   },
@@ -1537,7 +1685,15 @@ const definitionKnowledge = {
     tr: "Kedi, evlerde çok sık beslenen, uykucu, oyuncu ve sevimli küçük memeli evcil hayvandır.",
     en: "A cat is a small, sleepy, playful, and cute carnivorous mammal commonly kept as a pet in homes."
   },
+  cat: {
+    tr: "Kedi, evlerde çok sık beslenen, uykucu, oyuncu ve sevimli küçük memeli evcil hayvandır.",
+    en: "A cat is a small, sleepy, playful, and cute carnivorous mammal commonly kept as a pet in homes."
+  },
   "kopek": {
+    tr: "Köpek, insanlara sadakati ve koruyuculuğu ile bilinen, evlerde veya bahçelerde beslenen popüler bir evcil hayvandır.",
+    en: "A dog is a popular domestic animal kept in homes or gardens, known for its loyalty and protectiveness to humans."
+  },
+  "dog": {
     tr: "Köpek, insanlara sadakati ve koruyuculuğu ile bilinen, evlerde veya bahçelerde beslenen popüler bir evcil hayvandır.",
     en: "A dog is a popular domestic animal kept in homes or gardens, known for its loyalty and protectiveness to humans."
   },
@@ -1545,11 +1701,31 @@ const definitionKnowledge = {
     tr: "Alışveriş, ihtiyaç duyulan yiyecek, giysi veya eşyaları para karşılığında mağazalardan veya internetten alma işidir.",
     en: "Shopping is the act of buying needed food, clothes, or goods from stores or the internet in exchange for money."
   },
+  shopping: {
+    tr: "Alışveriş, ihtiyaç duyulan yiyecek, giysi veya eşyaları para karşılığında mağazalardan veya internetten alma işidir.",
+    en: "Shopping is the act of buying needed food, clothes, or goods from stores or the internet in exchange for money."
+  },
   tatil: {
     tr: "Tatil, işe veya okula ara verilerek dinlenmek, eğlenmek veya yeni yerler görmek için ayrılan serbest zamandır.",
     en: "A vacation or holiday is free time taken off from work or school to rest, have fun, or see new places."
   },
+  holiday: {
+    tr: "Tatil, işe veya okula ara verilerek dinlenmek, eğlenmek veya yeni yerler görmek için ayrılan serbest zamandır.",
+    en: "A vacation or holiday is free time taken off from work or school to rest, have fun, or see new places."
+  },
+  vacation: {
+    tr: "Tatil, işe veya okula ara verilerek dinlenmek, eğlenmek veya yeni yerler görmek için ayrılan serbest zamandır.",
+    en: "A vacation or holiday is free time taken off from work or school to rest, have fun, or see new places."
+  },
   saat: {
+    tr: "Saat, zamanı ölçmeye yarayan alettir veya günün hangi anında olduğumuzu belirten zaman dilimidir.",
+    en: "A clock/watch is a device used to measure time, or an hour representing a specific point in the day."
+  },
+  clock: {
+    tr: "Saat, zamanı ölçmeye yarayan alettir veya günün hangi anında olduğumuzu belirten zaman dilimidir.",
+    en: "A clock/watch is a device used to measure time, or an hour representing a specific point in the day."
+  },
+  watch: {
     tr: "Saat, zamanı ölçmeye yarayan alettir veya günün hangi anında olduğumuzu belirten zaman dilimidir.",
     en: "A clock/watch is a device used to measure time, or an hour representing a specific point in the day."
   },
