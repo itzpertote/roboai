@@ -320,7 +320,23 @@ function prepareSpeechText(text, lang) {
     return text; // İngilizce ise kelimeleri asla bozma, orijinal bırak
   }
 
-  function setupDOM() {
+  let spoken = ` ${text} `;
+  spoken = spoken.replace(/ai/gi, "ey ay");
+  spoken = spoken.replace(/ui/gi, "yu ay");
+  spoken = spoken.replace(/io/gi, "yo");
+  spoken = spoken.replace(/🤖/g, " robot ");
+  spoken = spoken.replace(/✨/g, " yıldız ");
+  spoken = spoken.replace(/🔥/g, " ateş ");
+  spoken = spoken.replace(/💻/g, " bilgisayar ");
+  spoken = spoken.replace(/🚀/g, " roket ");
+
+  // Fonksiyonu burada güvenli bir şekilde kapatıyoruz:
+  return spoken
+    .replace(/\s+/g, " ")
+    .trim();
+} // <-- Bu parantez fonksiyonu kapatarak aşağıdaki kodları korur!
+
+function setupDOM() {
   const micBtn = document.getElementById("micButton");
   const compForm = document.getElementById("composer");
   const txtInput = document.getElementById("textInput");
@@ -347,22 +363,6 @@ function prepareSpeechText(text, lang) {
     });
   });
 }
-
-  let spoken = ` ${text} `;
-  spoken = spoken.replace(/ai/gi, "ey ay");
-  spoken = spoken.replace(/ui/gi, "yu ay");
-  spoken = spoken.replace(/io/gi, "yo");
-  spoken = spoken.replace(/🤖/g, " robot ");
-  spoken = spoken.replace(/✨/g, " yıldız ");
-  spoken = spoken.replace(/🔥/g, " ateş ");
-  spoken = spoken.replace(/💻/g, " bilgisayar ");
-  spoken = spoken.replace(/🚀/g, " roket ");
-
-  // Fonksiyonu burada güvenli bir şekilde kapatıyoruz:
-  return spoken
-    .replace(/\s+/g, " ")
-    .trim();
-} // <-- Bu parantez fonksiyonu kapatarak aşağıdaki kodları korur!
 
 const englishPhoneticDictionary = {
   a: "e",
