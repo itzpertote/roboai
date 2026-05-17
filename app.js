@@ -634,7 +634,7 @@ const englishPhoneticDictionary = {
   needs: "nidz",
   not: "nat",
   now: "nau",
-  of: "ov",
+  of: "of",
   on: "on",
   one: "van",
   openai: "open ey ay",
@@ -1084,8 +1084,8 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["oner", "ne yapayim", "fikir ver", "advice", "suggest", "idea"])) {
     return lang === "tr"
-      ? "Kısa önerim: önce hedefi tek cümle yap, sonra en küçük çalışan parçayı kur. Robo AI için bu parça: arayüz, mikrofon, yerel cevap ve sesli okuma."
-      : "My short advice: make the goal one sentence, then build the smallest working piece. For Robo AI that piece is UI, microphone, local reply, and voice output.";
+      ? "Kısa önerim: Kodlama yap! Bu hep çok eğlenceli olmuştır."
+      : "My short advice: Code! It is really fun.";
   }
 
   if (hasAny(text, ["renk", "tasarim", "orb", "color", "design"])) {
@@ -1102,8 +1102,8 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["kac yasindasin", "yas", "how old", "age"])) {
     return lang === "tr"
-      ? "Bir yaşım yok; bu projede çalışan dijital bir asistanım. Ama bugün kendimi yeni derlenmiş gibi hissediyorum."
-      : "I do not have an age; I am a digital assistant running in this project. But today I feel freshly built.";
+      ? "Bir yaşım yok; sadece dijital bir asistanım. Ama bugün kendimi yeni derlenmiş gibi hissediyorum."
+      : "I do not have an age; I am a digital assistant. But today I feel freshly built.";
   }
 
   if (hasAny(text, ["beni duyuyor musun", "duydun mu", "can you hear me", "did you hear"])) {
@@ -1172,8 +1172,8 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["neden", "why"])) {
     return lang === "tr"
-      ? "Neyin nedeni?"
-      : "The reason for what?";
+      ? "Neyin nedeni? Eğer cümlende belirttiysen üzgünüm. Henüz geliştirme aşamasında olduğum için cümle ayırt etmede o kadar iyi değilim."
+      : "The reason for what? I'm sorry if you mentioned it in your sentence. I'm not very good at distinguishing between sentences yet, as I'm still in the development phase.";
   }
 
   if (hasAny(text, ["nasil", "how"])) {
