@@ -317,7 +317,11 @@ async function speak(text) {
   }
 
   synth.cancel();
-  const spokenLanguage = "tr-TR";
+  
+  // HATA BURADAYDI: Dil ne olursa olsun "tr-TR" seçiliyordu.
+  // Şimdi eğer seçili dil "en" (yani MIX) ise "en-US", değilse "tr-TR" yapıyoruz:
+  const spokenLanguage = language === "en" ? "en-US" : "tr-TR";
+  
   const speechText = prepareSpeechText(text, language);
   const utterance = new SpeechSynthesisUtterance(speechText);
   utterance.lang = spokenLanguage;
