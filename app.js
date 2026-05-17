@@ -74,10 +74,13 @@ let speakingTimer = null;
 let history = [];
 let apiReachable = false;
 let apiPillState = "demo";
+let availableVoices = [];
+let voicesLoaded = false;
 
 boot();
 
 function boot() {
+  primeVoices();
   setLanguage(language);
   configureRecognition();
   bindEvents();
@@ -102,6 +105,8 @@ function setLanguage(nextLanguage) {
   language = nextLanguage === "en" ? "en" : "tr";
   localStorage.setItem("robo-language", language);
   document.documentElement.lang = language;
+  synth?.cancel();
+  stopSyntheticSpeechLevel();
 
   for (const segment of elements.segments) {
     segment.classList.toggle("is-active", segment.dataset.lang === language);
@@ -266,22 +271,24 @@ function addMessage(role, text) {
   elements.messages.scrollTop = elements.messages.scrollHeight;
 }
 
-function speak(text) {
+async function speak(text) {
   if (!synth || !text) {
     setState("idle");
     return;
   }
 
   synth.cancel();
+  const spokenLanguage = language === "tr" ? "tr-TR" : "en-US";
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = language === "tr" ? "tr-TR" : "en-US";
+  utterance.lang = spokenLanguage;
   utterance.rate = 0.96;
   utterance.pitch = 1;
   utterance.volume = 1;
 
-  const voice = chooseVoice(utterance.lang);
+  const voice = await chooseVoice(spokenLanguage);
   if (voice) {
     utterance.voice = voice;
+    utterance.lang = voice.lang;
   }
 
   utterance.onstart = () => {
@@ -302,12 +309,82 @@ function speak(text) {
   synth.speak(utterance);
 }
 
-function chooseVoice(lang) {
-  const voices = synth.getVoices();
-  const base = lang.toLowerCase().slice(0, 2);
-  return voices.find(voice => voice.lang.toLowerCase() === lang.toLowerCase())
-    || voices.find(voice => voice.lang.toLowerCase().startsWith(base))
+async function chooseVoice(lang) {
+  const voices = await getVoices();
+  const target = lang.toLowerCase();
+  const base = target.slice(0, 2);
+  const scored = voices
+    .map(voice => ({ voice, score: scoreVoice(voice, target, base) }))
+    .filter(item => item.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  return scored[0]?.voice
     || null;
+}
+
+function primeVoices() {
+  if (!synth) {
+    return;
+  }
+
+  const updateVoices = () => {
+    availableVoices = synth.getVoices();
+    voicesLoaded = availableVoices.length > 0;
+  };
+
+  updateVoices();
+
+  if ("onvoiceschanged" in synth) {
+    synth.onvoiceschanged = updateVoices;
+  }
+}
+
+function getVoices() {
+  if (!synth) {
+    return Promise.resolve([]);
+  }
+
+  availableVoices = synth.getVoices();
+  if (availableVoices.length || voicesLoaded) {
+    return Promise.resolve(availableVoices);
+  }
+
+  return new Promise(resolve => {
+    const timeout = window.setTimeout(() => {
+      availableVoices = synth.getVoices();
+      resolve(availableVoices);
+    }, 900);
+
+    synth.onvoiceschanged = () => {
+      window.clearTimeout(timeout);
+      availableVoices = synth.getVoices();
+      voicesLoaded = availableVoices.length > 0;
+      resolve(availableVoices);
+    };
+  });
+}
+
+function scoreVoice(voice, target, base) {
+  const voiceLang = voice.lang.toLowerCase();
+  const voiceName = voice.name.toLowerCase();
+
+  if (voiceLang === target) {
+    return 100;
+  }
+
+  if (voiceLang.startsWith(`${base}-`)) {
+    return 80;
+  }
+
+  if (base === "en" && voiceName.includes("english")) {
+    return 65;
+  }
+
+  if (base === "tr" && (voiceName.includes("turkish") || voiceName.includes("turk"))) {
+    return 65;
+  }
+
+  return voiceLang.startsWith(base) ? 50 : 0;
 }
 
 async function startAudioLevel() {
@@ -529,8 +606,8 @@ function localBrainReply(message, lang) {
 
   if (matchesAny(text, ["Seni kodlayan kim?", "Who coded you?", "Yaratıcı", "Creator"])) {
     return lang === "tr"
-      ? "API kullanmadan çalışabilirim, ama bu yerel çekirdek sınırlıdır. Büyük dil modeli gibi yaratıcı ve derin cevaplar için bir modelin bir yerde çalışması gerekir."
-      : "I can work without an API, but this local core is limited. For creative and deep answers like a large language model, a model must run somewhere.";
+      ? "Ben ItzPertoTe tarafından kodlandım."
+      : "I was coded by ItzPertoTe.";
   }
 
   if (text.endsWith("?") || matchesAny(text, ["neden", "nasıl", "what", "why", "how"])) {
