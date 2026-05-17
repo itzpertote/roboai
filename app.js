@@ -992,13 +992,13 @@ function localBrainReply(message, lang) {
       : "Hello. I am Robo AI. My local core is active; write your question as a sentence and I will try to understand it.";
   }
 
-  if (hasAny(text, ["tesekkur", "sag ol", "eyvallah", "thanks", "thank you"])) {
+  if (hasAny(text, ["tesekkur", "sagol", "tsk", "thanks", "thank you"])) {
     return lang === "tr"
       ? "Rica ederim. Başka bir şeye ihtiyacın olursa buradayım."
       : "You are welcome. Just let me know if you need any help.";
   }
 
-  if (hasAny(text, ["gorusuruz", "bye", "goodbye", "cikis", "kapat"])) {
+  if (hasAny(text, ["gorusuruz", "bye", "goodbye", "hoscakal", "bb"])) {
     return lang === "tr"
       ? "Görüşürüz. Tekrar konuşmak istersen buradayım."
       : "Goodbye. If you want to talk again, I'm here.";
@@ -1036,14 +1036,14 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["turkce konus", "tr ye gec", "ingilizce konus", "en ye gec", "change language", "speak english", "speak turkish"])) {
     return lang === "tr"
-      ? "Dili üstteki TR ve EN düğmelerinden değiştirebilirsin. Değiştirince mikrofon dili ve okuma sesi de ona göre ayarlanır."
-      : "Use the TR and EN buttons at the top to change language. The microphone language and voice output follow that setting.";
+      ? "Dili üstteki TR ve MIX düğmelerinden değiştirebilirsin. Değiştirince mikrofon dili ve okuma sesi de ona göre ayarlanır. MIX İngilizcedir ama size ses Türkçe seslendiriciden gelir."
+      : "Use the TR and EN buttons at the top to change language. The microphone language and voice output follow that setting. MIX is English but the speaker will talk with Turkish accent.";
   }
 
   if (hasAny(text, ["ses", "okuma", "erkek", "kadin", "voice", "read aloud", "male", "female"])) {
     return lang === "tr"
-      ? "Ses tarayıcının yüklü seslerine bağlıdır. EN seçiliyken İngilizce ses bulursam onu kullanırım; yoksa tarayıcı varsayılan sese düşebilir."
-      : "The voice depends on the voices installed in your browser. In EN mode I pick an English voice when available; otherwise the browser may fall back to its default voice.";
+      ? "Üzgünüm sesim sadece Türkçe ve daha yüksek sesle konuşamam. İngilizce konuşabilsem de Türkçe şivesiyle."
+      : "I have only Turkish voice available and I can not read aloud. I can talk English but with Turkish accent.";
   }
 
   if (hasAny(text, ["mikrofon", "duymuyor", "sesimi almiyor", "permission", "microphone", "mic not working"])) {
@@ -1070,7 +1070,7 @@ function localBrainReply(message, lang) {
       : "I cannot know live weather without an API. But if you tell me the city and what you see outside, I can suggest clothing or plans.";
   }
 
-  if (hasAny(text, ["saka", "komik", "joke", "funny"])) {
+  if (hasAny(text, ["saka", "fikra", "joke", "funny"])) {
     return lang === "tr"
       ? "Küçük bir yazılımcı şakası: Kod çalışıyorsa dokunma; çalışmıyorsa önce noktalı virgüle bak."
       : "A tiny developer joke: if it works, do not touch it; if it does not, check the semicolon first.";
@@ -1078,8 +1078,8 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["moralim bozuk", "uzuldum", "kotu hissediyorum", "canim sikildi", "sad", "upset", "feel bad"])) {
     return lang === "tr"
-      ? "Üzgün hissetmen normal. Biraz yavaşlayalım: derin bir nefes al, tek bir küçük şeyi seç, onu beraber sadeleştirelim."
-      : "It is okay to feel bad. Let us slow down: take a breath, choose one small thing, and we can simplify it together.";
+      ? "Üzgün hissetmen normal. Biraz yavaşlayalım: derin bir nefes al."
+      : "It is okay to feel bad. Let us slow down: take a deep breath.";
   }
 
   if (hasAny(text, ["oner", "ne yapayim", "fikir ver", "advice", "suggest", "idea"])) {
@@ -1090,14 +1090,14 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["renk", "tasarim", "orb", "color", "design"])) {
     return lang === "tr"
-      ? "Tasarımda koyu arka plan, turkuaz enerji rengi ve konuşmaya tepki veren orb kullanıyorum. Bu yüzden arayüz daha futuristik görünüyor."
+      ? "Tasarımda koyu arka plan, turkuaz enerji rengi ve konuşmaya tepki veren bir küre kullanıyorum. Bu yüzden arayüz daha futuristik görünüyor."
       : "The design uses a dark background, cyan energy color, and a voice-reactive orb, which gives the interface a futuristic feel.";
   }
 
   if (hasAny(text, ["guvenli mi", "gizlilik", "privacy", "safe", "secure"])) {
     return lang === "tr"
-      ? "Yerel modda yazdığın metin dış API’ye gönderilmez. Mikrofon metne tarayıcı tarafından çevrilir; tarayıcının kendi ses tanıma sistemi yine izin gerektirir."
-      : "In local mode, your typed text is not sent to an external API. Speech recognition is handled by the browser and still requires microphone permission.";
+      ? "Tamamen güvenli bir yapay zekayım. Sadece konuşmamızı sen ve ben görebiliriz. Sayfayı yenilediğinde veya temizleye bastığında da sohbetimiz silinir."
+      : "I am a completely secure AI. Only you and I can see our conversation. Our chat will be deleted when you refresh the page or press clear.";
   }
 
   if (hasAny(text, ["kac yasindasin", "yas", "how old", "age"])) {
@@ -1154,17 +1154,17 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["plan yap", "adim adim", "step by step", "make a plan"])) {
     return lang === "tr"
-      ? "Plan: önce hedefi netleştir, sonra en küçük çalışan sürümü yap, sonra ses ve dil hatalarını düzelt, en son GitHub Pages'e yükleyip Ctrl+F5 ile test et."
-      : "Plan: define the goal, build the smallest working version, fix voice and language issues, then upload to GitHub Pages and test with Ctrl+F5.";
+      ? "Plan: Önce hedef belirle, model oluştur, uygula!"
+      : "Plan: define the goal, create a model or prototype, apply!";
   }
 
   if (hasAny(text, ["kod", "javascript", "html", "css", "code"])) {
     return lang === "tr"
-      ? "Bu proje üç ana dosyayla çalışıyor: HTML yapıyı kuruyor, CSS orb ve arayüzü çiziyor, JavaScript mikrofonu, yerel zekayı ve sesli okumayı yönetiyor."
-      : "This project runs with three main files: HTML builds the structure, CSS draws the orb and interface, and JavaScript controls the microphone, local brain, and voice output.";
+      ? "HTML dosyası web sitesinin iskeletidir. CSS dosyası sanattır, JS ise beynidir."
+      : "HTML file is the skeleton of the website. CSS file is the art, JS is brain.";
   }
 
-  if (hasAny(text, ["hata", "bug", "error", "sorun", "problem"])) {
+  if (hasAny(text, ["hata", "bug", "error", "problem"])) {
     return lang === "tr"
       ? "Hata çözmek için önce ekrandaki mesajı aynen oku, sonra hangi adımda olduğunu söyle. Genelde bu projede sorunlar cache, dosya yolu, mikrofon izni veya eski app.js yüzünden çıkıyor."
       : "To debug, read the exact error message and say which step you are on. In this project, issues usually come from cache, file paths, microphone permission, or an old app.js.";
@@ -1172,8 +1172,8 @@ function localBrainReply(message, lang) {
 
   if (hasAny(text, ["neden", "why"])) {
     return lang === "tr"
-      ? "Muhtemel neden: yerel web uygulamalarında çoğu davranış tarayıcı izni, dosya yolu, cache veya seçili dil durumuna bağlıdır. Sorunun hangi ekranda olduğunu söylersen daha net yönlendirebilirim."
-      : "Likely reason: in local web apps, most behavior depends on browser permissions, file paths, cache, or selected language state. Tell me the screen and I can guide more clearly.";
+      ? "Neyin nedeni?"
+      : "The reason for what?";
   }
 
   if (hasAny(text, ["nasil", "how"])) {
