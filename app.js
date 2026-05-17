@@ -223,54 +223,18 @@ async function submitText(rawText) {
   setBusy(true);
 
   try {
-    if (!apiBase || apiReachable === false) {
-      const reply = clientDemoReply(message);
-      addMessage("assistant", reply);
-      elements.subtitle.textContent = reply;
-      updateApiPill("demo");
-      speak(reply);
-      return;
-    }
-
-    const response = await fetch(apiUrl("/api/robo"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message,
-        language,
-        history: history.slice(-8)
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "API error");
-    }
-
-    const reply = sanitizeTranscript(data.reply || "");
+    const reply = clientDemoReply(message);
     addMessage("assistant", reply);
     elements.subtitle.textContent = reply;
-    apiReachable = true;
-    updateApiPill(data.demo ? "demo" : "ready");
+    updateApiPill("demo");
     speak(reply);
   } catch (error) {
-    if (!apiBase) {
-      apiReachable = false;
-      const reply = clientDemoReply(message);
-      addMessage("assistant", reply);
-      elements.subtitle.textContent = reply;
-      updateApiPill("demo");
-      speak(reply);
-      return;
-    }
-
     const copy = language === "tr"
-      ? `Bağlantı sorunu: ${error.message}`
-      : `Connection issue: ${error.message}`;
+      ? "Yerel çekirdek şu an cevap üretemedi. Biraz daha kısa yazıp tekrar dener misin?"
+      : "The local core could not answer right now. Try a shorter message and send it again.";
     addMessage("assistant", copy);
     elements.subtitle.textContent = copy;
-    updateApiPill("error");
+    updateApiPill("demo");
     setState("idle");
   } finally {
     setBusy(false);
@@ -466,25 +430,8 @@ function pulseSubtitle(text) {
 }
 
 async function refreshApiStatus() {
-  if (!apiBase) {
-    apiReachable = false;
-    updateApiPill("demo");
-    return;
-  }
-
-  try {
-    const response = await fetch(apiUrl("/api/status"));
-    if (!response.ok) {
-      throw new Error("status");
-    }
-
-    const data = await response.json();
-    apiReachable = true;
-    updateApiPill(data.apiReady ? "ready" : "demo");
-  } catch {
-    apiReachable = false;
-    updateApiPill(apiBase ? "error" : "demo");
-  }
+  apiReachable = false;
+  updateApiPill("demo");
 }
 
 function updateApiPill(state) {
@@ -544,13 +491,13 @@ function localBrainReply(message, lang) {
       : "Hello. I am Robo AI. Without an API, I run on my local core and can answer short questions, commands, and simple chats.";
   }
 
-  if (matchesAny(text, ["saat", "kaç", "time"])) {
+  if (matchesAny(text, ["saat", "saat kaç?", "time"])) {
     return lang === "tr"
       ? `Şu an saat ${now.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}.`
       : `It is ${now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}.`;
   }
 
-  if (matchesAny(text, ["tarih", "bugün", "date", "today"])) {
+  if (matchesAny(text, ["tarih", "Bugünün tarihi ne?", "date", "today"])) {
     return lang === "tr"
       ? `Bugünün tarihi ${now.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}.`
       : `Today is ${now.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}.`;
@@ -575,6 +522,12 @@ function localBrainReply(message, lang) {
   }
 
   if (matchesAny(text, ["api", "openrouter", "openai", "key"])) {
+    return lang === "tr"
+      ? "API kullanmadan çalışabilirim, ama bu yerel çekirdek sınırlıdır. Büyük dil modeli gibi yaratıcı ve derin cevaplar için bir modelin bir yerde çalışması gerekir."
+      : "I can work without an API, but this local core is limited. For creative and deep answers like a large language model, a model must run somewhere.";
+  }
+
+  if (matchesAny(text, ["Seni kodlayan kim?", "Who coded you?", "Yaratıcı", "Creator"])) {
     return lang === "tr"
       ? "API kullanmadan çalışabilirim, ama bu yerel çekirdek sınırlıdır. Büyük dil modeli gibi yaratıcı ve derin cevaplar için bir modelin bir yerde çalışması gerekir."
       : "I can work without an API, but this local core is limited. For creative and deep answers like a large language model, a model must run somewhere.";
