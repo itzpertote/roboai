@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+
   <meta charset="UTF-8" />
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0" />
@@ -9,49 +11,48 @@
   <title>Robo AI</title>
 
   <link rel="stylesheet" href="styles.css" />
+
 </head>
 
 <body>
 
-  <!-- TOP BAR -->
+  <!-- APP -->
 
-  <header class="topbar">
+  <div class="app-shell">
 
-    <div class="brand-area">
+    <!-- SIDEBAR -->
 
-      <h1 class="brand-title">
-        Robo AI
-      </h1>
+    <aside class="sidebar">
 
-      <p
-        class="brand-subtitle"
-        id="subtitle">
+      <div class="sidebar-top">
 
-        robo-model-1.0-local active
+        <div class="brand-block">
 
-      </p>
+          <h1 class="brand-title">
+            Robo AI
+          </h1>
 
-    </div>
+          <p
+            class="brand-subtitle"
+            id="subtitle">
 
-  </header>
+            robo-model-1.0-local active
 
-  <!-- CHAT -->
+          </p>
 
-  <main
-    class="chat-feed"
-    id="chatFeed">
+        </div>
 
-    <!-- messages append here -->
+        <!-- API STATUS -->
 
-  </main>
+        <div
+          class="api-pill"
+          id="apiPill">
 
-  <!-- COMPOSER -->
+          Local
 
-  <footer class="composer-shell">
+        </div>
 
-    <form
-      class="composer"
-      id="composer">
+      </div>
 
       <!-- MODEL PICKER -->
 
@@ -59,7 +60,7 @@
         class="model-picker"
         id="modelPicker">
 
-        <!-- LOCAL MODEL -->
+        <!-- LOCAL -->
 
         <button
           type="button"
@@ -81,7 +82,7 @@
 
         </button>
 
-        <!-- MINI MODEL -->
+        <!-- MINI -->
 
         <button
           type="button"
@@ -107,45 +108,71 @@
 
       </div>
 
-      <!-- TEXT INPUT -->
+      <!-- LOGIN -->
 
-      <div class="input-area">
+      <div class="sidebar-bottom">
 
-        <textarea
-          id="textInput"
-          name="message"
-          autocomplete="off"
-          maxlength="1800"
-          placeholder="Mesaj yaz..."
-          rows="1"></textarea>
+        <button
+          type="button"
+          class="login-button"
+          id="loginButton">
+
+          Login
+
+        </button>
 
       </div>
 
-      <!-- LOGIN BUTTON -->
+    </aside>
 
-      <button
-        type="button"
-        class="login-button"
-        id="loginButton">
+    <!-- MAIN -->
 
-        Login
+    <main class="main-panel">
 
-      </button>
+      <!-- CHAT -->
 
-      <!-- SEND BUTTON -->
+      <section
+        class="chat-feed"
+        id="chatFeed">
 
-      <button
-        class="send-button"
-        type="submit"
-        id="sendButton">
+      </section>
 
-        Gönder
+      <!-- COMPOSER -->
 
-      </button>
+      <footer class="composer-shell">
 
-    </form>
+        <form
+          class="composer"
+          id="composer">
 
-  </footer>
+          <!-- INPUT -->
+
+          <textarea
+            id="textInput"
+            name="message"
+            rows="1"
+            maxlength="1800"
+            autocomplete="off"
+            placeholder="Mesaj yaz..."></textarea>
+
+          <!-- SEND -->
+
+          <button
+            class="send-button"
+            id="sendButton"
+            type="submit">
+
+            Gönder
+
+          </button>
+
+        </form>
+
+      </footer>
+
+    </main>
+
+  </div>
 
   <!-- LOGIN MODAL -->
 
@@ -172,14 +199,14 @@
         <input
           type="text"
           id="usernameInput"
-          placeholder="Username"
-          autocomplete="username" />
+          autocomplete="username"
+          placeholder="Username" />
 
         <input
           type="password"
           id="passwordInput"
-          placeholder="Password"
-          autocomplete="current-password" />
+          autocomplete="current-password"
+          placeholder="Password" />
 
       </div>
 
@@ -198,6 +225,8 @@
     </div>
 
   </div>
+
+  <!-- SCRIPT -->
 
   <script src="app.js"></script>
 
