@@ -286,6 +286,7 @@ function addMessage(role, text, options = {}) {
   // EĞER GELEN MESAJ ASİSTANA (ROBO AI) AİTSE
   // Eğer gelen mesaj asistana (Robo AI) aitse
   // EĞER GELEN MESAJ ASİSTANA (ROBO AI) AİTSE
+  // EĞER GELEN MESAJ ASİSTANA (ROBO AI) AİTSE
   if (role === "assistant") {
     const dotsHTML = "<span></span><span></span><span></span>";
     
@@ -295,16 +296,17 @@ function addMessage(role, text, options = {}) {
     thinkingIndicator.innerHTML = dotsHTML;
     body.appendChild(thinkingIndicator);
 
+    // CRITICAL: Subtitle alanının içini tamamen temizleyip SADECE üç noktayı koyuyoruz
     if (elements.subtitle) {
       elements.subtitle.innerHTML = `<div class="thinking-dots subtitle-dots">${dotsHTML}</div>`;
     }
 
     // 2. Tam olarak 2 saniye (2000ms) bekleten tek bir setTimeout açıyoruz
     setTimeout(() => {
-      // Düşünme animasyonlarını (noktaları) ekrandan kaldırıyoruz
+      // Düşünme animasyonlarını (noktaları) temizliyoruz
       thinkingIndicator.remove();
       if (elements.subtitle) {
-        elements.subtitle.textContent = ""; 
+        elements.subtitle.textContent = ""; // Başta metin kalmasın diye içini sıfırlıyoruz
       }
 
       // --- SES TAM 2 SANİYE SONRA NOKTALAR BİTİNCE BAŞLIYOR ---
@@ -325,6 +327,7 @@ function addMessage(role, text, options = {}) {
           const char = clean.charAt(i);
           textNode.nodeValue += char;
           
+          // Noktalar bittikten sonra harf harf büyük altyazı alanına yazılıyor
           if (elements.subtitle) {
             elements.subtitle.textContent = textNode.nodeValue;
           }
@@ -339,14 +342,8 @@ function addMessage(role, text, options = {}) {
         }
       }, 20);
 
-    }, 2000); // <-- Animasyonun tam olarak kalacağı 2 saniyelik (2000ms) süre
+    }, 2000); // Animasyonun tam olarak kalacağı 2 saniyelik süre
 
-  } else {
-    // Kullanıcı mesajı ise hiç beklemeden direkt yazdır
-    body.textContent = clean;
-    if (elements.subtitle) {
-      elements.subtitle.textContent = clean;
-    }
   }
 
   // Eğer web araması sonuçları (linkler) varsa ekleme mantığı
