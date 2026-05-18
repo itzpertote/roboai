@@ -1,119 +1,205 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Robo AI</title>
-    <link rel="stylesheet" href="./styles.css?v=intent-11">
-  </head>
-  <body>
-    <main class="shell" data-state="idle">
-      <header class="topbar">
-        <a class="brand" href="./" aria-label="Robo AI">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span>Robo AI</span>
-        </a>
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0" />
 
-        <div class="topbar-actions">
-          <div class="language-switch" role="group" aria-label="Language">
-            <button class="segment is-active" type="button" data-lang="tr">TR</button>
-            <button class="segment" type="button" data-lang="en">MIX</button>
-          </div>
-          <span class="api-pill" id="apiStatus">API</span>
-        </div>
-      </header>
+  <title>Robo AI</title>
 
-      <section class="stage" aria-live="polite">
-        <div class="status-line">
-          <span id="stateText">Hazır</span>
-          <span id="confidenceText">TR</span>
-        </div>
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-        <div class="orb-wrap" aria-hidden="true">
-          <div class="orb-ring ring-one"></div>
-          <div class="orb-ring ring-two"></div>
-          <div class="orb">
-            <div class="orb-core"></div>
-            <div class="orb-highlight"></div>
-          </div>
-          <div class="voice-bars">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
+<body>
 
-        <div class="subtitle" id="subtitle">Robo AI hazır.</div>
+  <!-- TOP BAR -->
 
-        <form class="composer" id="composer">
+  <header class="topbar">
 
-  <button class="icon-button mic-button"
+    <div class="brand-area">
+
+      <h1 class="brand-title">
+        Robo AI
+      </h1>
+
+      <p
+        class="brand-subtitle"
+        id="subtitle">
+
+        robo-model-1.0-local active
+
+      </p>
+
+    </div>
+
+  </header>
+
+  <!-- CHAT -->
+
+  <main
+    class="chat-feed"
+    id="chatFeed">
+
+    <!-- messages append here -->
+
+  </main>
+
+  <!-- COMPOSER -->
+
+  <footer class="composer-shell">
+
+    <form
+      class="composer"
+      id="composer">
+
+      <!-- MODEL PICKER -->
+
+      <div
+        class="model-picker"
+        id="modelPicker">
+
+        <!-- LOCAL MODEL -->
+
+        <button
           type="button"
-          id="micButton">
-    <span class="mic-glyph"></span>
-  </button>
+          class="model-card active"
+          data-model="robo-1.0-local">
 
-  <input
-    id="textInput"
-    name="message"
-    autocomplete="off"
-    maxlength="1800"
-    placeholder="Mesaj yaz">
+          <span class="model-name">
+            robo-model-1.0-local
+          </span>
 
-  <select id="modelSelect" class="model-select hidden">
-    <option value="robo-1.1mini">robo-model-1.1mini</option>
-  </select>
+          <span
+            class="model-desc"
+            data-tr="Yerel model • hızlı • çevrimdışı"
+            data-en="Local model • fast • offline">
 
-  <button
-    type="button"
-    class="login-button"
-    id="loginButton">
-    Login
-  </button>
+            Yerel model • hızlı • çevrimdışı
 
-  <button
-    class="send-button"
-    type="submit"
-    id="sendButton">
-    Gönder
-  </button>
+          </span>
 
-          </form>
-      </section>
+        </button>
 
-      <aside class="panel" aria-label="Conversation">
-        <div class="panel-head">
-          <h1>Robo AI</h1>
-          <button class="ghost-button" type="button" id="clearButton">Temizle</button>
-        </div>
-        <div class="messages" id="messages"></div>
-      </aside>
-    </main>
+        <!-- MINI MODEL -->
 
-    <script src="./app.js?v=intent-11" defer></script>
+        <button
+          type="button"
+          class="model-card locked"
+          data-model="robo-1.1-mini"
+          id="miniModelButton">
 
-    <div class="login-modal hidden" id="loginModal">
-  <div class="login-card">
+          <span class="model-name">
+            robo-model-1.1-mini
+          </span>
 
-    <h2>Login</h2>
+          <span
+            class="model-desc lock-text"
+            id="miniModelText"
+            data-tr="Bu modeli kullanmak için giriş yapmalısın"
+            data-en="You need to be logged in to use this model">
 
-    <input
-      type="text"
-      id="usernameInput"
-      placeholder="Username">
+            Bu modeli kullanmak için giriş yapmalısın
 
-    <input
-      type="password"
-      id="passwordInput"
-      placeholder="Password">
+          </span>
 
-    <button id="loginSubmit">
-      Login
-    </button>
+        </button>
+
+      </div>
+
+      <!-- TEXT INPUT -->
+
+      <div class="input-area">
+
+        <textarea
+          id="textInput"
+          name="message"
+          autocomplete="off"
+          maxlength="1800"
+          placeholder="Mesaj yaz..."
+          rows="1"></textarea>
+
+      </div>
+
+      <!-- LOGIN BUTTON -->
+
+      <button
+        type="button"
+        class="login-button"
+        id="loginButton">
+
+        Login
+
+      </button>
+
+      <!-- SEND BUTTON -->
+
+      <button
+        class="send-button"
+        type="submit"
+        id="sendButton">
+
+        Gönder
+
+      </button>
+
+    </form>
+
+  </footer>
+
+  <!-- LOGIN MODAL -->
+
+  <div
+    class="login-modal hidden"
+    id="loginModal">
+
+    <div class="login-card">
+
+      <div class="login-header">
+
+        <h2 id="loginTitle">
+          Login
+        </h2>
+
+        <p id="loginSubtitle">
+          robo-model-1.1-mini access
+        </p>
+
+      </div>
+
+      <div class="login-body">
+
+        <input
+          type="text"
+          id="usernameInput"
+          placeholder="Username"
+          autocomplete="username" />
+
+        <input
+          type="password"
+          id="passwordInput"
+          placeholder="Password"
+          autocomplete="current-password" />
+
+      </div>
+
+      <div class="login-actions">
+
+        <button
+          type="button"
+          id="loginSubmit">
+
+          Login
+
+        </button>
+
+      </div>
+
+    </div>
 
   </div>
-</div>
-  </body>
+
+  <script src="app.js"></script>
+
+</body>
 </html>
