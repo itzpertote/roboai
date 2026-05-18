@@ -498,6 +498,11 @@ input::placeholder {
   }
 }
 
+@keyframes roboFadeUp {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-width: 900px) {
   .shell {
     grid-template-columns: 1fr;
