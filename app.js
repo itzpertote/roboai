@@ -282,7 +282,12 @@ function addMessage(role, text, options = {}) {
 
   const body = document.createElement("div");
   body.className = "message-text";
-  body.textContent = clean;
+
+  if (role === "assistant") {
+    typewriteFadeUp(body, clean);
+  } else {
+    body.textContent = clean;
+  }
 
   if (Array.isArray(options.results) && options.results.length) {
     const list = document.createElement("div");
@@ -688,7 +693,68 @@ function setState(state) {
     speaking: copy.speaking
   }[state] || copy.ready;
 
-  elements.stateText.textContent = label;
+  if (state === "thinking") {
+    startThinkingGlow(elements.stateText, label);
+  } else {
+    stopThinkingGlow();
+    elements.stateText.textContent = label;
+  }
+}
+
+let _thinkingGlowTimer = null;
+
+function stopThinkingGlow() {
+  if (_thinkingGlowTimer) {
+    clearInterval(_thinkingGlowTimer);
+    _thinkingGlowTimer = null;
+  }
+}
+
+function startThinkingGlow(el, label) {
+  stopThinkingGlow();
+  const chars = [...label];
+  let offset = 0;
+
+  function renderFrame() {
+    el.innerHTML = "";
+    chars.forEach((ch, i) => {
+      const span = document.createElement("span");
+      span.textContent = ch === " " ? "\u00A0" : ch;
+      const wave = (Math.sin((i - offset) * 0.7) + 1) / 2;
+      const opacity = 0.3 + wave * 0.7;
+      const blur = (1 - wave) * 6;
+      span.style.cssText = `
+        display: inline-block;
+        opacity: ${opacity.toFixed(2)};
+        filter: blur(${blur.toFixed(1)}px);
+        text-shadow: 0 0 ${(wave * 14).toFixed(0)}px currentColor;
+        transition: opacity 0.1s, filter 0.1s;
+      `;
+      el.appendChild(span);
+    });
+    offset += 0.18;
+  }
+
+  renderFrame();
+  _thinkingGlowTimer = setInterval(renderFrame, 60);
+}
+
+function typewriteFadeUp(el, text) {
+  el.innerHTML = "";
+  const chars = [...text];
+  chars.forEach((ch, i) => {
+    setTimeout(() => {
+      const span = document.createElement("span");
+      span.textContent = ch === " " ? "\u00A0" : ch;
+      span.style.cssText = `
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(5px);
+        animation: roboFadeUp 0.22s ease forwards;
+      `;
+      el.appendChild(span);
+    }, i * 22);
+  });
 }
 
 function setBusy(isBusy) {
