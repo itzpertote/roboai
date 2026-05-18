@@ -1,234 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Robo AI</title>
+    <link rel="stylesheet" href="./styles.css?v=intent-11">
+  </head>
+  <body>
+    <main class="shell" data-state="idle">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Robo AI">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Robo AI</span>
+        </a>
 
-  <meta charset="UTF-8" />
+        <div class="topbar-actions">
+          <div class="language-switch" role="group" aria-label="Language">
+            <button class="segment is-active" type="button" data-lang="tr">TR</button>
+            <button class="segment" type="button" data-lang="en">MIX</button>
+          </div>
+          <span class="api-pill" id="apiStatus">API</span>
+        </div>
+      </header>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0" />
-
-  <title>Robo AI</title>
-
-  <link rel="stylesheet" href="styles.css" />
-
-</head>
-
-<body>
-
-  <!-- APP -->
-
-  <div class="app-shell">
-
-    <!-- SIDEBAR -->
-
-    <aside class="sidebar">
-
-      <div class="sidebar-top">
-
-        <div class="brand-block">
-
-          <h1 class="brand-title">
-            Robo AI
-          </h1>
-
-          <p
-            class="brand-subtitle"
-            id="subtitle">
-
-            robo-model-1.0-local active
-
-          </p>
-
+      <section class="stage" aria-live="polite">
+        <div class="status-line">
+          <span id="stateText">Hazır</span>
+          <span id="confidenceText">TR</span>
         </div>
 
-        <!-- API STATUS -->
-
-        <div
-          class="api-pill"
-          id="apiPill">
-
-          Local
-
+        <div class="orb-wrap" aria-hidden="true">
+          <div class="orb-ring ring-one"></div>
+          <div class="orb-ring ring-two"></div>
+          <div class="orb">
+            <div class="orb-core"></div>
+            <div class="orb-highlight"></div>
+          </div>
+          <div class="voice-bars">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
 
-      </div>
+        <div class="subtitle" id="subtitle">Robo AI hazır.</div>
 
-      <!-- MODEL PICKER -->
-
-      <div
-        class="model-picker"
-        id="modelPicker">
-
-        <!-- LOCAL -->
-
-        <button
-          type="button"
-          class="model-card active"
-          data-model="robo-1.0-local">
-
-          <span class="model-name">
-            robo-model-1.0-local
-          </span>
-
-          <span
-            class="model-desc"
-            data-tr="Yerel model • hızlı • çevrimdışı"
-            data-en="Local model • fast • offline">
-
-            Yerel model • hızlı • çevrimdışı
-
-          </span>
-
-        </button>
-
-        <!-- MINI -->
-
-        <button
-          type="button"
-          class="model-card locked"
-          data-model="robo-1.1-mini"
-          id="miniModelButton">
-
-          <span class="model-name">
-            robo-model-1.1-mini
-          </span>
-
-          <span
-            class="model-desc lock-text"
-            id="miniModelText"
-            data-tr="Bu modeli kullanmak için giriş yapmalısın"
-            data-en="You need to be logged in to use this model">
-
-            Bu modeli kullanmak için giriş yapmalısın
-
-          </span>
-
-        </button>
-
-      </div>
-
-      <!-- LOGIN -->
-
-      <div class="sidebar-bottom">
-
-        <button
-          type="button"
-          class="login-button"
-          id="loginButton">
-
-          Login
-
-        </button>
-
-      </div>
-
-    </aside>
-
-    <!-- MAIN -->
-
-    <main class="main-panel">
-
-      <!-- CHAT -->
-
-      <section
-        class="chat-feed"
-        id="chatFeed">
-
+        <form class="composer" id="composer">
+          <button class="icon-button mic-button" type="button" id="micButton" aria-label="Mikrofon">
+            <span class="mic-glyph" aria-hidden="true"></span>
+          </button>
+          <input id="textInput" name="message" autocomplete="off" maxlength="1800" placeholder="Mesaj yaz">
+          <button class="send-button" type="submit" id="sendButton">Gönder</button>
+        </form>
       </section>
 
-      <!-- COMPOSER -->
-
-      <footer class="composer-shell">
-
-        <form
-          class="composer"
-          id="composer">
-
-          <!-- INPUT -->
-
-          <textarea
-            id="textInput"
-            name="message"
-            rows="1"
-            maxlength="1800"
-            autocomplete="off"
-            placeholder="Mesaj yaz..."></textarea>
-
-          <!-- SEND -->
-
-          <button
-            class="send-button"
-            id="sendButton"
-            type="submit">
-
-            Gönder
-
-          </button>
-
-        </form>
-
-      </footer>
-
+      <aside class="panel" aria-label="Conversation">
+        <div class="panel-head">
+          <h1>Robo AI</h1>
+          <button class="ghost-button" type="button" id="clearButton">Temizle</button>
+        </div>
+        <div class="messages" id="messages"></div>
+      </aside>
     </main>
 
-  </div>
-
-  <!-- LOGIN MODAL -->
-
-  <div
-    class="login-modal hidden"
-    id="loginModal">
-
-    <div class="login-card">
-
-      <div class="login-header">
-
-        <h2 id="loginTitle">
-          Login
-        </h2>
-
-        <p id="loginSubtitle">
-          robo-model-1.1-mini access
-        </p>
-
-      </div>
-
-      <div class="login-body">
-
-        <input
-          type="text"
-          id="usernameInput"
-          autocomplete="username"
-          placeholder="Username" />
-
-        <input
-          type="password"
-          id="passwordInput"
-          autocomplete="current-password"
-          placeholder="Password" />
-
-      </div>
-
-      <div class="login-actions">
-
-        <button
-          type="button"
-          id="loginSubmit">
-
-          Login
-
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- SCRIPT -->
-
-  <script src="app.js"></script>
-
-</body>
+    <script src="./app.js?v=intent-11" defer></script>
+  </body>
 </html>
