@@ -236,7 +236,7 @@ async function submitText(rawText) {
   try {
     if (searchQuery) {
       const reply = await searchWeb(searchQuery);
-      elements.subtitle.textContent = reply;
+      setSubtitle(reply);
       updateApiPill("demo");
       speak(reply);
       return;
@@ -244,7 +244,7 @@ async function submitText(rawText) {
 
     const reply = clientDemoReply(message);
     addMessage("assistant", reply);
-    elements.subtitle.textContent = reply;
+    setSubtitle(reply);
     updateApiPill("demo");
     speak(reply);
   } catch (error) {
@@ -256,7 +256,7 @@ async function submitText(rawText) {
         ? "Yerel çekirdek şu an cevap üretemedi. Biraz daha kısa yazıp tekrar dener misin?"
         : "The local core could not answer right now. Try a shorter message and send it again.");
     addMessage("assistant", copy);
-    elements.subtitle.textContent = copy;
+    setSubtitle(copy);
     updateApiPill("demo");
     setState("idle");
   } finally {
@@ -282,7 +282,12 @@ function addMessage(role, text, options = {}) {
 
   const body = document.createElement("div");
   body.className = "message-text";
-  body.textContent = clean;
+
+  if (role === "assistant") {
+    typewriteFadeUp(body, clean);
+  } else {
+    body.textContent = clean;
+  }
 
   if (Array.isArray(options.results) && options.results.length) {
     const list = document.createElement("div");
@@ -688,7 +693,75 @@ function setState(state) {
     speaking: copy.speaking
   }[state] || copy.ready;
 
+  // stateText in topbar stays as plain text
   elements.stateText.textContent = label;
+
+  // subtitle below the orb gets the animated version
+  if (state === "thinking") {
+    startThinkingGlow(elements.subtitle, label);
+  } else {
+    stopThinkingGlow();
+    typewriteFadeUp(elements.subtitle, label, 38);
+  }
+}
+
+let _thinkingGlowTimer = null;
+
+function stopThinkingGlow() {
+  if (_thinkingGlowTimer) {
+    clearInterval(_thinkingGlowTimer);
+    _thinkingGlowTimer = null;
+  }
+}
+
+function startThinkingGlow(el, label) {
+  stopThinkingGlow();
+  const chars = [...label];
+  let offset = 0;
+
+  function renderFrame() {
+    el.innerHTML = "";
+    chars.forEach((ch, i) => {
+      const span = document.createElement("span");
+      span.textContent = ch === " " ? "\u00A0" : ch;
+      const wave = (Math.sin((i - offset) * 0.7) + 1) / 2;
+      const opacity = 0.25 + wave * 0.75;
+      const blur = (1 - wave) * 5;
+      span.style.cssText = `
+        display: inline-block;
+        opacity: ${opacity.toFixed(2)};
+        filter: blur(${blur.toFixed(1)}px);
+        text-shadow: 0 0 ${(wave * 12).toFixed(0)}px currentColor;
+      `;
+      el.appendChild(span);
+    });
+    offset += 0.18;
+  }
+
+  renderFrame();
+  _thinkingGlowTimer = setInterval(renderFrame, 55);
+}
+
+function setSubtitle(text) {
+  stopThinkingGlow();
+  elements.subtitle.textContent = text;
+}
+  el.innerHTML = "";
+  const charDelay = delay || 38;
+  const chars = [...text];
+  chars.forEach((ch, i) => {
+    setTimeout(() => {
+      const span = document.createElement("span");
+      span.textContent = ch === " " ? "\u00A0" : ch;
+      span.style.cssText = `
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(5px);
+        animation: roboFadeUp 0.22s ease forwards;
+      `;
+      el.appendChild(span);
+    }, i * charDelay);
+  });
 }
 
 function setBusy(isBusy) {
