@@ -236,15 +236,14 @@ async function submitText(rawText) {
   try {
     if (searchQuery) {
       const reply = await searchWeb(searchQuery);
-      elements.subtitle.textContent = reply;
+      //elements.subtitle.textContent = reply;
       updateApiPill("demo");
-      speak(reply);
       return;
     }
 
     const reply = clientDemoReply(message);
     addMessage("assistant", reply);
-    elements.subtitle.textContent = reply;
+    //elements.subtitle.textContent = reply;
     updateApiPill("demo");
     //speak(reply);
   } catch (error) {
