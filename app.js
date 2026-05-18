@@ -282,6 +282,101 @@ function addMessage(role, text, options = {}) {
 
   const body = document.createElement("div");
   body.className = "message-text";
+
+  // EĞER GELEN MESAJ ASİSTANA (ROBO AI) AİTSE
+  if (role === "assistant") {
+    // 1. Önce 3 noktadan oluşan düşünme animasyonunu (spans) oluşturup ekliyoruz
+    const thinkingIndicator = document.createElement("div");
+    thinkingIndicator.className = "thinking-dots";
+    thinkingIndicator.innerHTML = "<span></span><span></span><span></span>";
+    body.appendChild(thinkingIndicator);
+
+    // 2. Metnin uzunluğuna göre dinamik bir düşünme süresi hesaplıyoruz
+    // Kısa metinlerde az bekler, uzun metinlerde (örn. web arama sonuçlarında) daha uzun bekler
+    // Math.max(1500, ...) -> En kısa cevapta bile en az 1.5 saniye düşünme animasyonu görünecek
+    // Math.min(3500, ...) -> Çok devasa metinlerde bile maksimum 3.5 saniye bekleyecek
+    const dynamicThinkingTime = Math.min(3500, Math.max(1500, clean.length * 12));
+
+    // Belirlenen dinamik süre dolunca çalışacak zamanlayıcı
+    setTimeout(() => {
+      // Düşünme animasyonunu kaldırıyoruz
+      thinkingIndicator.remove();
+
+      // Gerçek metin düğümü ve yanıp sönen imleci hazırlıyoruz
+      const textNode = document.createTextNode("");
+      const cursor = document.createElement("span");
+      cursor.className = "typewriter-cursor";
+      
+      body.appendChild(textNode);
+      body.appendChild(cursor);
+
+      let i = 0;
+      // Daktilo yazı hızı (Her harf arası 20ms)
+      const typer = setInterval(() => {
+        if (i < clean.length) {
+          textNode.nodeValue += clean.charAt(i);
+          i++;
+          // Yazı aktıkça chat panelini otomatik aşağı kaydırır
+          elements.messages.scrollTop = elements.messages.scrollHeight;
+        } else {
+          clearInterval(typer); // Yazma işlemi bitti
+          
+          // Yazı bittikten 1.5 saniye sonra imleci ekrandan temizle
+          setTimeout(() => cursor.remove(), 1500);
+        }
+      }, 20);
+
+    }, dynamicThinkingTime);
+
+  } else {
+    // Kullanıcı mesajı ise hiç beklemeden direkt yazdır
+    body.textContent = clean;
+  }
+
+  // Eğer web araması sonuçları (linkler) varsa fonksiyon sonuna ekleme mantığı
+  if (Array.isArray(options.results) && options.results.length) {
+    const list = document.createElement("div");
+    list.className = "search-results";
+
+    for (const result of options.results) {
+      const link = document.createElement("a");
+      link.className = "search-result";
+      link.href = result.link;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+
+      const title = document.createElement("span");
+      title.className = "search-title";
+      title.textContent = result.title;
+
+      const snippet = document.createElement("span");
+      snippet.className = "search-snippet";
+      snippet.textContent = result.snippet;
+
+      link.append(title, snippet);
+      list.append(link);
+    }
+
+    body.append(list);
+  }
+
+  message.append(label, body);
+  elements.messages.append(message);
+  elements.messages.scrollTop = elements.messages.scrollHeight;
+}
+
+  history.push({ role, text: clean });
+  history = history.slice(-12);
+
+  const message = document.createElement("article");
+  message.className = `message ${role}`;
+
+  const label = document.createElement("div");
+  label.className = "message-role";
+  label.textContent = role === "user" ? i18n[language].user : i18n[language].assistant;
+
+  const body = document.createElement("div");
+  body.className = "message-text";
   body.textContent = clean;
 
   if (Array.isArray(options.results) && options.results.length) {
