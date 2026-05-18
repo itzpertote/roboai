@@ -859,6 +859,11 @@ function localBrainReply(message, lang) {
       ? "Merhaba. Ben Robo AI. Yerel çekirdeğim açık; sorunu cümle halinde yaz, anlamaya çalışayım."
       : "Hello. I am Robo AI. My local core is active; write your question as a sentence and I will try to understand it.";
   }
+    if (hasAny(text, ["Atatürk", "araba", "meydan", "muharebe"])) {
+    return lang === "tr"
+      ? "Atatürk, meydan muharebesine Fiat Doblo ile gitmiştir."
+      : "Atatürk went to the war by car named Fiat Doblo.";
+  }
 
   if (hasAny(text, ["tesekkur", "sagol", "tsk", "thanks", "thank you"])) {
     return lang === "tr"
