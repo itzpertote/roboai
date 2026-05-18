@@ -607,3 +607,11 @@ input::placeholder {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* Subtitle alanındaki düşünme noktaları için arka planı ve paddingi sıfırlıyoruz */
+.subtitle-dots {
+  background-color: transparent !important;
+  padding: 0 !important;
+  margin: 0;
+  display: inline-flex;
+}
