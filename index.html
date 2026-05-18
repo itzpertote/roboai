@@ -48,12 +48,39 @@
         <div class="subtitle" id="subtitle">Robo AI hazır.</div>
 
         <form class="composer" id="composer">
-          <button class="icon-button mic-button" type="button" id="micButton" aria-label="Mikrofon">
-            <span class="mic-glyph" aria-hidden="true"></span>
-          </button>
-          <input id="textInput" name="message" autocomplete="off" maxlength="1800" placeholder="Mesaj yaz">
-          <button class="send-button" type="submit" id="sendButton">Gönder</button>
-        </form>
+
+  <button class="icon-button mic-button"
+          type="button"
+          id="micButton">
+    <span class="mic-glyph"></span>
+  </button>
+
+  <input
+    id="textInput"
+    name="message"
+    autocomplete="off"
+    maxlength="1800"
+    placeholder="Mesaj yaz">
+
+  <select id="modelSelect" class="model-select hidden">
+    <option value="robo-1.1mini">robo-model-1.1mini</option>
+  </select>
+
+  <button
+    type="button"
+    class="login-button"
+    id="loginButton">
+    Login
+  </button>
+
+  <button
+    class="send-button"
+    type="submit"
+    id="sendButton">
+    Gönder
+  </button>
+
+          </form>
       </section>
 
       <aside class="panel" aria-label="Conversation">
@@ -66,5 +93,27 @@
     </main>
 
     <script src="./app.js?v=intent-11" defer></script>
+
+    <div class="login-modal hidden" id="loginModal">
+  <div class="login-card">
+
+    <h2>Login</h2>
+
+    <input
+      type="text"
+      id="usernameInput"
+      placeholder="Username">
+
+    <input
+      type="password"
+      id="passwordInput"
+      placeholder="Password">
+
+    <button id="loginSubmit">
+      Login
+    </button>
+
+  </div>
+</div>
   </body>
 </html>
