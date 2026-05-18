@@ -243,10 +243,10 @@ async function submitText(rawText) {
     }
 
     const reply = clientDemoReply(message);
-    //addMessage("assistant", reply);
+    addMessage("assistant", reply);
     elements.subtitle.textContent = reply;
     updateApiPill("demo");
-    speak(reply);
+    //speak(reply);
   } catch (error) {
     const copy = searchQuery
       ? (language === "tr"
@@ -285,22 +285,32 @@ function addMessage(role, text, options = {}) {
 
   // EĞER GELEN MESAJ ASİSTANA (ROBO AI) AİTSE
   // Eğer gelen mesaj asistana (Robo AI) aitse
+  // EĞER GELEN MESAJ ASİSTANA (ROBO AI) AİTSE
   if (role === "assistant") {
-    // 1. Önce 3 noktadan oluşan düşünme animasyonunu (spans) oluşturup ekliyoruz
+    const dotsHTML = "<span></span><span></span><span></span>";
+    
+    // 1. Önce hem chat balonuna hem subtitle alanına noktaları ekliyoruz
     const thinkingIndicator = document.createElement("div");
     thinkingIndicator.className = "thinking-dots";
-    thinkingIndicator.innerHTML = "<span></span><span></span><span></span>";
+    thinkingIndicator.innerHTML = dotsHTML;
     body.appendChild(thinkingIndicator);
 
-    // Metnin uzunluğuna göre dinamik düşünme süresi hesapla (En az 1.5 sn, en fazla 3.5 sn)
-    const dynamicThinkingTime = Math.min(3500, Math.max(1500, clean.length * 12));
+    if (elements.subtitle) {
+      elements.subtitle.innerHTML = `<div class="thinking-dots subtitle-dots">${dotsHTML}</div>`;
+    }
 
-    // Belirlenen dinamik süre dolunca çalışacak zamanlayıcı
+    // 2. Tam olarak 2 saniye (2000ms) bekleten tek bir setTimeout açıyoruz
     setTimeout(() => {
-      // Düşünme animasyonunu kaldırıyoruz
+      // Düşünme animasyonlarını (noktaları) ekrandan kaldırıyoruz
       thinkingIndicator.remove();
+      if (elements.subtitle) {
+        elements.subtitle.textContent = ""; 
+      }
 
-      // Gerçek metin düğümü ve yanıp sönen imleci hazırlıyoruz
+      // --- SES TAM 2 SANİYE SONRA NOKTALAR BİTİNCE BAŞLIYOR ---
+      speak(clean); 
+
+      // 3. Daktilo yazı efekti kurulumu
       const textNode = document.createTextNode("");
       const cursor = document.createElement("span");
       cursor.className = "typewriter-cursor";
@@ -309,25 +319,34 @@ function addMessage(role, text, options = {}) {
       body.appendChild(cursor);
 
       let i = 0;
-      // Daktilo yazı hızı (Her harf arası 20ms)
+      // Harf harf ekrana yazdırma zamanlayıcısı (Her harf arası 20ms)
       const typer = setInterval(() => {
         if (i < clean.length) {
-          textNode.nodeValue += clean.charAt(i);
+          const char = clean.charAt(i);
+          textNode.nodeValue += char;
+          
+          if (elements.subtitle) {
+            elements.subtitle.textContent = textNode.nodeValue;
+          }
+          
           i++;
           elements.messages.scrollTop = elements.messages.scrollHeight;
         } else {
           clearInterval(typer); // Yazma işlemi bitti
           
-          // Yazı bittikten 1.5 saniye sonra imleci ekrandan temizle
+          // Yanıp sönen daktilo imlecini yazı bittikten 1.5 saniye sonra kaldır
           setTimeout(() => cursor.remove(), 1500);
         }
       }, 20);
 
-    }, dynamicThinkingTime); // setTimeout burada düzgünce kapanıyor
+    }, 2000); // <-- Animasyonun tam olarak kalacağı 2 saniyelik (2000ms) süre
 
   } else {
     // Kullanıcı mesajı ise hiç beklemeden direkt yazdır
     body.textContent = clean;
+    if (elements.subtitle) {
+      elements.subtitle.textContent = clean;
+    }
   }
 
   // Eğer web araması sonuçları (linkler) varsa ekleme mantığı
