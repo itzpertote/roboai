@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Robo AI</title>
+    <link rel="stylesheet" href="./styles.css?v=intent-11">
+  </head>
+  <body>
+    <main class="shell" data-state="idle">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Robo AI">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Robo AI</span>
+        </a>
+
+        <div class="topbar-actions">
+          <div class="language-switch" role="group" aria-label="Language">
+            <button class="segment is-active" type="button" data-lang="tr">TR</button>
+            <button class="segment" type="button" data-lang="en">MIX</button>
+          </div>
+          <span class="api-pill" id="apiStatus">API</span>
+        </div>
+      </header>
+
+      <section class="stage" aria-live="polite">
+        <div class="status-line">
+          <span id="stateText">Hazır</span>
+          <span id="confidenceText">TR</span>
+        </div>
+
+        <div class="orb-wrap" aria-hidden="true">
+          <div class="orb-ring ring-one"></div>
+          <div class="orb-ring ring-two"></div>
+          <div class="orb">
+            <div class="orb-core"></div>
+            <div class="orb-highlight"></div>
+          </div>
+          <div class="voice-bars">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="subtitle" id="subtitle">Robo AI hazır.</div>
+
+        <form class="composer" id="composer">
+          <button class="icon-button mic-button" type="button" id="micButton" aria-label="Mikrofon">
+            <span class="mic-glyph" aria-hidden="true"></span>
+          </button>
+          <input id="textInput" name="message" autocomplete="off" maxlength="1800" placeholder="Mesaj yaz">
+          <button class="send-button" type="submit" id="sendButton">Gönder</button>
+        </form>
+      </section>
+
+      <aside class="panel" aria-label="Conversation">
+        <div class="panel-head">
+          <h1>Robo AI</h1>
+          <button class="ghost-button" type="button" id="clearButton">Temizle</button>
+        </div>
+        <div class="messages" id="messages"></div>
+      </aside>
+    </main>
+
+    <script src="./app.js?v=intent-11" defer></script>
+  </body>
+</html>
