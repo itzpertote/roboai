@@ -243,7 +243,7 @@ async function submitText(rawText) {
     }
 
     const reply = clientDemoReply(message);
-    addMessage("assistant", reply);
+    //addMessage("assistant", reply);
     elements.subtitle.textContent = reply;
     updateApiPill("demo");
     speak(reply);
