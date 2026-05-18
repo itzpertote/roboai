@@ -762,7 +762,6 @@ function setSubtitle(text) {
       el.appendChild(span);
     }, i * charDelay);
   });
-}
 
 function setBusy(isBusy) {
   elements.sendButton.disabled = isBusy;
